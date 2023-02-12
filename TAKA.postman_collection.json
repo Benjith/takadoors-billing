@@ -1,0 +1,316 @@
+{
+	"variables": [],
+	"info": {
+		"name": "TAKA",
+		"_postman_id": "fb1b325c-6f71-7d6a-80ab-6c2918314ade",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://127.0.0.1:8000/api/register",
+			"request": {
+				"url": "http://127.0.0.1:8000/api/register",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "firstname",
+							"value": "admin",
+							"description": ""
+						},
+						{
+							"key": "email",
+							"value": "admin@gmail.com",
+							"description": ""
+						},
+						{
+							"key": "password",
+							"value": "12345678900",
+							"description": ""
+						},
+						{
+							"key": "lastname",
+							"value": "kk",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "9988776655",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "role_id",
+							"value": "1",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/login",
+			"request": {
+				"url": "http://127.0.0.1:8000/api/login",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "anu@gmail.com",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "12345678900",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/me",
+			"request": {
+				"url": "http://127.0.0.1:8000/api/me",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer 3|Guj7HkJXU7TEYUV9pQQNxQOmgSq4Nnx9Rogacve2",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/materials",
+			"request": {
+				"url": "http://127.0.0.1:8000/api/materials",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer 8|hW4HQUhb7ZX1fuWEh8lhAZHvfdBBWiYlfVhO4CCE",
+						"description": ""
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "teek",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/materials/1",
+			"request": {
+				"url": "http://127.0.0.1:8000/api/materials/1",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer 8|hW4HQUhb7ZX1fuWEh8lhAZHvfdBBWiYlfVhO4CCE",
+						"description": ""
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/stock?material_id=3",
+			"request": {
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/stock?material_id=3",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"stock"
+					],
+					"query": [
+						{
+							"key": "material_id",
+							"value": "3",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer 9|kOGrpDd7DwlURB1YQtm5sC5YvqM0JKGaTMeoY4sS",
+						"description": ""
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "",
+						"value": "",
+						"description": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "material_id",
+							"value": "3",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "design",
+							"value": "circle",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "height",
+							"value": "10",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "width",
+							"value": "36.99",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "quantity",
+							"value": "9",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/order",
+			"request": {
+				"url": "http://127.0.0.1:8000/api/order",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer 11|1x6ILcvIIWXKQjYwZ0aIZ85mRfnEEh8rcY2AHULf",
+						"description": ""
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "code",
+							"value": "ORDER1",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "design",
+							"value": "PV1 ",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "length",
+							"value": "8",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "width",
+							"value": "500",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "quantity",
+							"value": "1",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "frame",
+							"value": "9",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "remarks",
+							"value": "good",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "thickness",
+							"value": "6",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
