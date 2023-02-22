@@ -104,4 +104,64 @@ class AuthController extends Controller
         return $request->user();
     }
 
+    public function ChangePassword(Request $request)
+    {
+    try{
+       $validator=Validator::make($request->all(),[
+          'current_password'    =>'required',
+          'new_password'        =>'required|min:4|max:30',
+          'user_id'             =>'required'
+        //   'confirm_password' =>'required|same:new_password'
+       ]);
+       if ($validator->fails()) {
+          return response()->json([
+             'hasError' => TRUE,
+             'message'=>'validations fails',
+             'response' =>$validator->errors()
+          ],422);
+       }
+       $user=User::where('id',$request->user_id)->first();
+    if($user){
+       if (Hash::check($request->current_password,$user->password)) {
+          $user->update([
+             'password'=>Hash::make($request->new_password)
+          ]);
+ 
+ 
+          return response()->json([
+             'hasError' => FALSE,
+             'errorCode' => 200,
+             'message'=>' password successfully updated',
+             'response'=>NULL,
+            ],200);
+        }
+        else
+        {
+           return response()->json([
+             'hasError' => TRUE,
+             'errorCode' => 422,
+              'message'=>'old password does not match',
+              'response' =>$validator->errors()
+           ],422);
+        }
+    }
+    else{
+        return response()->json([
+            'hasError' => TRUE,
+            'errorCode' => 500,
+             'message'=>'No user found',
+             'response' =>$validator->errors()
+          ],500);
+    }
+    }
+        catch (Exception $ex) {
+            $response = array(
+                'hasError' => TRUE,
+                'errorCode' => 500,
+                'message' => 'Server Error.' . $ex->getMessage(),
+                'response' => null
+            );
+            return \Response::json($response);  
+        }
+     } 
 }

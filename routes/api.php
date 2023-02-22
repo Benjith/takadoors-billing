@@ -20,8 +20,7 @@ use App\Http\Controllers\UserController;
 */
 Route::post('/user/create', 'AuthController@register');
 Route::post('/login', 'AuthController@login');
-
- 
+Route::post('/changepassword', 'AuthController@ChangePassword');
 
 Route::middleware('auth:sanctum')->group(function () {
     //Manage material

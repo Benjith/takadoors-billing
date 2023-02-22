@@ -55,6 +55,18 @@
               <span class="menu-title">Order</span>
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ URL::to('/closing_stock') }}">
+              <i class="mdi mdi-home menu-icon"></i>
+              <span class="menu-title">Closing Stock Report</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ URL::to('/agent_wise') }}">
+              <i class="mdi mdi-home menu-icon"></i>
+              <span class="menu-title">Agent wise Report</span>
+            </a>
+          </li>
         </ul>
       </nav>
 

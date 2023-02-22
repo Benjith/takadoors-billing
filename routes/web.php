@@ -21,4 +21,8 @@ Route::get('/', [ReportController::class,'index']);
 Route::any('/search', [ReportController::class,'search'])->name('search');
 Route::any('/print/{from_date}/{to_date}/{fromserial}/{toserial}', [ReportController::class,'print'])->name('print');
 
+//closing stock
+Route::get('/closing_stock', [ReportController::class,'closing_stock_report']);
+Route::get('/agent_wise', [ReportController::class,'agent_wise_report']);
+
 

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Stock;
 use App\Models\Order;
+use App\Models\User;
 use DB;
 use PDF;
 use Response;
@@ -104,6 +106,37 @@ class ReportController extends Controller
             return view('welcome', array('orders' => $orders,'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial));
         }catch(Exception $e){
             return redirect(url('/'));
+        }
+    }
+
+    public function closing_stock_report()
+    {
+        try{
+            $stocks = Stock::where('status',1)->orderBy('stocks.id','ASC')->paginate(20);     
+            return view('reports.stock_report',compact('stocks'));
+        }catch (Exception $ex) {
+            return redirect('/');
+        }
+    }
+    public function agent_wise_report()
+    {
+        try{
+            $orders = Order::where('is_active',1)
+            ->groupby('orders.user_id')
+            ->paginate(20); 
+            foreach($orders as $key=>$order){
+                $received_count= Order::where('status',1)->where('is_active',1)->where('user_id',$order->user_id)->get()->count();
+                $dispatched_count= Order::where('status',3)->where('is_active',1)->where('user_id',$order->user_id)->get()->count(); 
+                $report_arr[]=array(
+                    'name' => User::where('id',$order->user_id)->first()->fullname,
+                    'received_count'=> $received_count,
+                    'dispatched_count'=> $dispatched_count, 
+                    'pending_count'=> $received_count-$dispatched_count
+                );
+            }    
+            return view('reports.agentwise_report',compact('report_arr','orders'));
+        }catch (Exception $ex) {
+            return redirect('/');
         }
     }
 }
