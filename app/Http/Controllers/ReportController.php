@@ -89,7 +89,7 @@ class ReportController extends Controller
             ->select('id','thickness','length','width','quantity','design','code','remarks','status','user_id','serial_no')->get();
             if(!$orders->isEmpty()){
                 $data=['orders'=>$orders,'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial];
-                ini_set('memory_limit', '256M');               
+                ini_set('memory_limit', '512M');               
                 $pdf = PDF::loadView('order_pdf',$data);
                 $report = 'report_'.rand(10,100).'.pdf';
                 $pdf->save(public_path('/reports/'.$report));
