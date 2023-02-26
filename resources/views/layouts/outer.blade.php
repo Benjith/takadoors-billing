@@ -57,19 +57,24 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ URL::to('/closing_stock') }}">
-              <i class="mdi mdi-home menu-icon"></i>
+              <i class="mdi mdi-door menu-icon"></i>
               <span class="menu-title">Closing Stock Report</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ URL::to('/agent_wise') }}">
-              <i class="mdi mdi-home menu-icon"></i>
+              <i class="mdi mdi-face-agent menu-icon"></i>
               <span class="menu-title">Agent wise Report</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ URL::to('/gate_pass') }}">
+              <i class="mdi mdi-routes menu-icon"></i>
+              <span class="menu-title">Gate Pass Report</span>
             </a>
           </li>
         </ul>
       </nav>
-
       @yield('content')
 
       <footer class="footer">

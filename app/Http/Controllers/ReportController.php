@@ -139,4 +139,19 @@ class ReportController extends Controller
             return redirect('/');
         }
     }
+
+    public function gate_pass_report()
+    {
+        try{
+            $orders = Order::leftjoin('users','users.id','=','orders.user_id')
+            ->where('is_active',1)
+            ->where('status',4)
+            ->select('orders.*','users.fullname')
+            ->paginate(20); 
+            return view('reports.gatepass_report',compact('orders'));
+        }catch (Exception $ex) {
+            return redirect('/');
+        }
+    }
+
 }

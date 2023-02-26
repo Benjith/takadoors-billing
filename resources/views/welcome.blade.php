@@ -4,7 +4,6 @@
    <!-- partial -->
       <div class="main-panel">
         <div class="content-wrapper">
-          
           <div class="row">
             <div class="col-md-12 grid-margin">
               <div class="d-flex justify-content-between flex-wrap"  >
@@ -30,8 +29,7 @@
                     <div class="col-xs-6">
                         <button class="btn btn-primary mt-2 mt-xl-0">Submit</button>    
                     </div>   
-                  </div>             
-                  </div>
+                  </div>     
 </form>
                   </div>
                  <!-- <div class="d-flex">

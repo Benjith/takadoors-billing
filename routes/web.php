@@ -24,5 +24,6 @@ Route::any('/print/{from_date}/{to_date}/{fromserial}/{toserial}', [ReportContro
 //closing stock
 Route::get('/closing_stock', [ReportController::class,'closing_stock_report']);
 Route::get('/agent_wise', [ReportController::class,'agent_wise_report']);
+Route::get('/gate_pass', [ReportController::class,'gate_pass_report']);
 
 
