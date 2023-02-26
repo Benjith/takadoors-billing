@@ -391,7 +391,10 @@ class OrderController extends Controller
                         'quantity'=>($result_stock->quantity)-(($request->quantity)*2),
                     ]);
                     $data = Order::whereId($id)->update($request->all()); 
-                   
+                    // if($request->status == 4){
+                    //     $gate_pass = Order::whereId($id)->update(['driver_name'=>$request->driver_name,'route'=>$request->route]);
+                    //
+                //  }
                     $response = array(
                         'hasError' => false,
                         'errorCode' => -1,
