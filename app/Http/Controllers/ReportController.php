@@ -124,6 +124,7 @@ class ReportController extends Controller
             $orders = Order::where('is_active',1)
             ->groupby('orders.user_id')
             ->paginate(20); 
+            $report_arr = array();
             foreach($orders as $key=>$order){
                 $received_count= Order::where('status',1)->where('is_active',1)->where('user_id',$order->user_id)->get()->count();
                 $dispatched_count= Order::where('status',3)->where('is_active',1)->where('user_id',$order->user_id)->get()->count(); 
@@ -152,6 +153,32 @@ class ReportController extends Controller
         }catch (Exception $ex) {
             return redirect('/');
         }
+    }
+    public function agent_report_search(Request $request) {
+        $from_date = $request->get('fromdate')?$request->get('fromdate'):'';
+        $to_date = $request->get('todate')?$request->get('todate'):'';
+        $orders = DB::table('orders')
+        ->when($from_date != "" && $to_date != "",function($query) use ($from_date,$to_date){
+            $query->whereBetween('created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])->get();
+        })
+        ->when($from_date != "" && $to_date == "",function($query) use ($from_date,$to_date){
+            $query->where('created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")->get();
+        })
+        ->where('is_active',1)
+        ->groupby('orders.user_id')
+        ->paginate(20);
+        $report_arr = array();
+        foreach($orders as $key=>$order){
+            $received_count= Order::where('status',1)->where('is_active',1)->where('user_id',$order->user_id)->get()->count();
+            $dispatched_count= Order::where('status',3)->where('is_active',1)->where('user_id',$order->user_id)->get()->count(); 
+            $report_arr[]=array(
+                'name' => User::where('id',$order->user_id)->first()->fullname,
+                'received_count'=> $received_count,
+                'dispatched_count'=> $dispatched_count, 
+                'pending_count'=> $received_count-$dispatched_count
+            );
+        }    
+        return view('reports/agentwise_report', array('report_arr' => $report_arr,'orders'=>$orders,'from_date'=>$from_date,'to_date'=>$to_date));
     }
 
 }

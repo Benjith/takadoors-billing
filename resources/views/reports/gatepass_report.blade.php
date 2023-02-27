@@ -18,7 +18,7 @@
             <div class="col-md-12 stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <p class="card-title">AGENT WISE REPORT</p>
+                  <p class="card-title">GATE PASS REPORT</p>
                   <div class="table-responsive">
                     <table id="recent-purchases-listing" class="table">
                       <thead>

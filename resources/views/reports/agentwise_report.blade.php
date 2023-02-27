@@ -7,6 +7,21 @@
           
           <div class="row">
             
+          <form method="POST" action="{{ route('agent_search')}}">
+                        @csrf
+                  <div class="input-group">
+                    <div class="col-xs-6">
+                        <input type="date" id="fromDate" name="fromdate" value="<?php if(isset($from_date)) echo $from_date; ?>" class="form-control" placeholder="From Date" aria-label="search" aria-describedby="search">                      
+                    </div>  
+                    <div class="col-xs-6">
+                        <input type="date" id="toDate" name="todate" value="<?php if(isset($to_date)) echo $to_date; ?>" class="form-control" placeholder="To Date" aria-label="search" aria-describedby="search">
+                    </div> 
+                    <div class="col-xs-6 agent-input">
+                        <button class="btn btn-primary mt-2 mt-xl-0">Submit</button>    
+                    </div>
+                  </div>                    
+        </form>
+</div>
           <div class="status_message"></div>
           @if(Session::has('error'))
           <div class="alert-danger flash-message" >  <span> {{ Session::get('error') }} </span>   </div>
@@ -35,9 +50,9 @@
                       </tbody>
                     </table>
 {{ $orders->links('pagination::bootstrap-4') }}
-
                   </div>
                 </div>
+          
               </div>
             </div>
           </div>
