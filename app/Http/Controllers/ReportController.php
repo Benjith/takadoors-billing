@@ -127,7 +127,7 @@ class ReportController extends Controller
             $report_arr = array();
             foreach($orders as $key=>$order){
                 $received_count= Order::where('status',1)->where('is_active',1)->where('user_id',$order->user_id)->get()->count();
-                $dispatched_count= Order::where('status',3)->where('is_active',1)->where('user_id',$order->user_id)->get()->count(); 
+                $dispatched_count= Order::where('status',4)->where('is_active',1)->where('user_id',$order->user_id)->get()->count(); 
                 $report_arr[]=array(
                     'name' => User::where('id',$order->user_id)->first()->fullname,
                     'received_count'=> $received_count,
@@ -170,7 +170,7 @@ class ReportController extends Controller
         $report_arr = array();
         foreach($orders as $key=>$order){
             $received_count= Order::where('status',1)->where('is_active',1)->where('user_id',$order->user_id)->get()->count();
-            $dispatched_count= Order::where('status',3)->where('is_active',1)->where('user_id',$order->user_id)->get()->count(); 
+            $dispatched_count= Order::where('status',4)->where('is_active',1)->where('user_id',$order->user_id)->get()->count(); 
             $report_arr[]=array(
                 'name' => User::where('id',$order->user_id)->first()->fullname,
                 'received_count'=> $received_count,
