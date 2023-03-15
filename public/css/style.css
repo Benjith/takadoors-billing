@@ -23213,3 +23213,10 @@ dl li {
   margin-bottom: 20px;
   padding-top:3px;
 }
+.custom-select {
+  position: relative;
+  font-family: Arial;
+}
+
+
+

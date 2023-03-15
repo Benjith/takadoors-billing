@@ -19,17 +19,29 @@
                         <input type="date" id="toDate" name="todate" value="<?php if(isset($to_date)) echo $to_date; ?>" class="form-control" placeholder="To Date" aria-label="search" aria-describedby="search">
                     </div> 
                   </div>
+                 
                   <div class="input-group">
                     <div class="col-xs-6">
                         <input type="text" id="serialNo" name="fromserial" value="<?php if(isset($fromserial)) echo $fromserial; ?>" class="form-control" placeholder="From Serial Number" aria-label="search" aria-describedby="search">
                     </div> 
                     <div class="col-xs-6">
                         <input type="text" id="serialNo" name="toserial" value="<?php if(isset($toserial)) echo $toserial; ?>" class="form-control" placeholder="To Serial Number" aria-label="search" aria-describedby="search">
-                    </div>  
-                    <div class="col-xs-6">
-                        <button class="btn btn-primary mt-2 mt-xl-0">Submit</button>    
                     </div>   
-                  </div>     
+                   
+                  </div>  
+                  <div class="input-group">
+                    <div class="custom-select" style="width:200px;">
+                          <select name="agent" class="form-control" style="height:39px;">
+                            <option value="">Select Agent</option>
+                            @foreach($agents as $key=>$agent)
+                            <option <?php if($selected_agent == $agent->id ){ ?> selected="selected" <?php } ?> value="{{$agent->id}}">{{$agent->fullname}}</option>
+                            @endforeach
+                          </select>
+                      </div> 
+                      <div class="col-xs-6">
+                        <button class="btn btn-primary mt-2 mt-xl-0">Submit</button>    
+                    </div>    
+                  </div> 
 </form>
                   </div>
                  <!-- <div class="d-flex">
@@ -37,9 +49,9 @@
                     <p class="text-muted mb-0 hover-cursor">&nbsp;/&nbsp;Dashboard&nbsp;/&nbsp;</p>
                     <p class="text-primary mb-0 hover-cursor">Analytics</p>
                   </div> -->
-                </div><?php if($from_date == '')$from_date="null";if($to_date == '')$to_date="null";if($fromserial == '')$fromserial="null";if($toserial == '')$toserial="null"; ?>
+                </div><?php if($from_date == '')$from_date="null";if($to_date == '')$to_date="null";if($fromserial == '')$fromserial="null";if($toserial == '')$toserial="null";if($selected_agent == '')$selected_agent="null"; ?>
                 <div class="d-flex justify-content-between align-items-end flex-wrap" id="print">
-                    <a href="{{ URL::to('/print',['fromdate' => $from_date,'todate'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial]) }}"><button class="btn btn-primary mt-2 mt-xl-0">Print</button></a>
+                    <a href="{{ URL::to('/print',['fromdate' => $from_date,'todate'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial,'agent'=>$selected_agent]) }}"><button class="btn btn-primary mt-2 mt-xl-0">Print</button></a>
                 </div>
               </div>
             </div>
