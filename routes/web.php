@@ -19,7 +19,7 @@ use App\Http\Controllers\ReportController;
 // });
 Route::get('/', [ReportController::class,'index']);
 Route::any('/search', [ReportController::class,'search'])->name('search');
-Route::any('/print/{from_date}/{to_date}/{fromserial}/{toserial}/{agent}', [ReportController::class,'print'])->name('print');
+Route::any('/print/{from_date}/{to_date}/{fromserial}/{toserial}/{agent}/{code}', [ReportController::class,'print'])->name('print');
 
 //closing stock
 Route::get('/closing_stock', [ReportController::class,'closing_stock_report']);

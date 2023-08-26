@@ -29,7 +29,8 @@ class ReportController extends Controller
             $toserial = "";     
             $agents = User::all();
             $selected_agent = "";
-            return view('welcome',compact('selected_agent','orders','from_date','to_date','fromserial','toserial','agents'));
+            $code = "";
+            return view('welcome',compact('code','selected_agent','orders','from_date','to_date','fromserial','toserial','agents'));
         }catch (Exception $ex) {
             return redirect('/');
         }
@@ -41,23 +42,50 @@ class ReportController extends Controller
         $fromserial = $request->get('fromserial')?$request->get('fromserial'):'';
         $toserial = $request->get('toserial')?$request->get('toserial'):'';
         $agent = $request->get('agent')?$request->get('agent'):'';
+        $code = $request->get('code')?$request->get('code'):'';
         $orders = DB::table('orders')
-        ->when($agent == "" && $from_date != "" && $to_date != "",function($query) use ($agent,$from_date,$to_date){
+        ->when($agent == "" && $code == ""  && $from_date != "" && $to_date != "",function($query) use ($agent,$from_date,$to_date){
             $query->whereBetween('created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])->get();
         })
-        ->when($agent == "" && $from_date != "" && $to_date == "",function($query) use ($agent,$from_date,$to_date){
+        ->when($agent == "" && $code == "" && $from_date != "" && $to_date == "",function($query) use ($agent,$from_date,$to_date){
             $query->where('created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")->get();
         })
-        ->when($agent != "" && $from_date != "" && $to_date != "",function($query) use ($agent,$from_date,$to_date){
+        ->when($agent != "" && $code == "" && $from_date != "" && $to_date != "",function($query) use ($agent,$from_date,$to_date){
             $query->whereBetween('created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])
             ->where('user_id',$agent)->get();
         })
-        ->when($agent != "" && $from_date != "" && $to_date == "",function($query) use ($agent,$from_date,$to_date){
+        ->when($agent != ""  && $code == "" && $from_date != "" && $to_date == "",function($query) use ($agent,$from_date,$to_date){
             $query->where('created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")
             ->where('user_id',$agent)->get();
         })
-        ->when($agent != "" && $from_date == "" && $to_date == "",function($query) use ($agent,$from_date,$to_date){
+        ->when($agent != ""  && $code == "" && $from_date == "" && $to_date == "",function($query) use ($agent,$from_date,$to_date){
             $query->where('user_id',$agent)->get();
+        })
+        ->when($agent == ""  && $code != "" && $from_date == "" && $to_date == "",function($query) use ($code,$from_date,$to_date){
+            $query->where('code',$code)->get();
+        })
+        ->when($agent == ""  && $code != "" && $from_date != "" && $to_date == "",function($query) use ($code,$from_date,$to_date){
+            $query->where('created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")
+            ->where('code',$code)->get();
+        })
+        ->when($agent == ""  && $code != "" && $from_date != "" && $to_date != "",function($query) use ($code,$from_date,$to_date){
+            $query->whereBetween('created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])
+            ->where('code',$code)->get();
+        })
+        ->when($agent != ""  && $code != "" && $from_date == "" && $to_date == "",function($query) use ($code,$agent,$from_date,$to_date){
+            $query->where('code',$code)
+            ->where('user_id',$agent)->get();
+        })
+        ->when($agent != ""  && $code != "" && $from_date != "" && $to_date == "",function($query) use ($code,$agent,$from_date,$to_date){
+            $query->where('code',$code)
+            ->where('user_id',$agent)
+            ->where('created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")->get();
+        })
+        ->when($agent != ""  && $code != "" && $from_date != "" && $to_date != "",function($query) use ($code,$agent,$from_date,$to_date){
+            $query->where('code',$code)
+            ->where('user_id',$agent)
+            ->whereBetween('created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])
+            ->get();
         })
         ->when($fromserial != "" && $toserial != "",function($query) use ($fromserial,$toserial){
             $query->whereBetween('serial_no',[intval($fromserial),intval($toserial)])->get();
@@ -69,10 +97,10 @@ class ReportController extends Controller
         ->orderBy('orders.id','ASC')
         ->select('id','thickness','length','width','quantity','design','code','remarks','status','user_id','serial_no')->paginate(20);
         $agents = User::all();
-        return view('welcome', array('agents'=>$agents,'selected_agent'=>$agent,'orders' => $orders,'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial));
+        return view('welcome', array('agents'=>$agents,'code'=>$code ,'selected_agent'=>$agent,'orders' => $orders,'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial));
     }
     
-    public function print(Request $request,$from_date,$to_date,$fromserial,$toserial,$agent) {
+    public function print(Request $request,$from_date,$to_date,$fromserial,$toserial,$agent,$code) {
         try{      
             if($from_date == "null"){
                 $from_date = '';
@@ -89,26 +117,55 @@ class ReportController extends Controller
             if($agent == "null"){
                 $agent = '';
             }
+            if($code == "null"){
+                $code = '';
+            }
             $orders = DB::table('orders')
-            ->when($agent == "" && $from_date != "" && $to_date != "",function($query) use ($agent,$from_date,$to_date){
+            ->when($agent == "" && $code == ""  && $from_date != "" && $to_date != "",function($query) use ($agent,$from_date,$to_date){
                 $query->whereBetween('created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])->get();
             })
-            ->when($agent == "" && $from_date != "" && $to_date == "",function($query) use ($agent,$from_date,$to_date){
+            ->when($agent == "" && $code == "" && $from_date != "" && $to_date == "",function($query) use ($agent,$from_date,$to_date){
                 $query->where('created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")->get();
             })
-            ->when($agent != "" && $from_date != "" && $to_date != "",function($query) use ($agent,$from_date,$to_date){
+            ->when($agent != "" && $code == "" && $from_date != "" && $to_date != "",function($query) use ($agent,$from_date,$to_date){
                 $query->whereBetween('created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])
                 ->where('user_id',$agent)->get();
             })
-            ->when($agent != "" && $from_date != "" && $to_date == "",function($query) use ($agent,$from_date,$to_date){
+            ->when($agent != ""  && $code == "" && $from_date != "" && $to_date == "",function($query) use ($agent,$from_date,$to_date){
                 $query->where('created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")
                 ->where('user_id',$agent)->get();
             })
-            ->when($agent != "" && $from_date == "" && $to_date == "",function($query) use ($agent,$from_date,$to_date){
+            ->when($agent != ""  && $code == "" && $from_date == "" && $to_date == "",function($query) use ($agent,$from_date,$to_date){
                 $query->where('user_id',$agent)->get();
             })
+            ->when($agent == ""  && $code != "" && $from_date == "" && $to_date == "",function($query) use ($code,$from_date,$to_date){
+                $query->where('code',$code)->get();
+            })
+            ->when($agent == ""  && $code != "" && $from_date != "" && $to_date == "",function($query) use ($code,$from_date,$to_date){
+                $query->where('created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")
+                ->where('code',$code)->get();
+            })
+            ->when($agent == ""  && $code != "" && $from_date != "" && $to_date != "",function($query) use ($code,$from_date,$to_date){
+                $query->whereBetween('created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])
+                ->where('code',$code)->get();
+            })
+            ->when($agent != ""  && $code != "" && $from_date == "" && $to_date == "",function($query) use ($code,$agent,$from_date,$to_date){
+                $query->where('code',$code)
+                ->where('user_id',$agent)->get();
+            })
+            ->when($agent != ""  && $code != "" && $from_date != "" && $to_date == "",function($query) use ($code,$agent,$from_date,$to_date){
+                $query->where('code',$code)
+                ->where('user_id',$agent)
+                ->where('created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")->get();
+            })
+            ->when($agent != ""  && $code != "" && $from_date != "" && $to_date != "",function($query) use ($code,$agent,$from_date,$to_date){
+                $query->where('code',$code)
+                ->where('user_id',$agent)
+                ->whereBetween('created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])
+                ->get();
+            })
             ->when($fromserial != "" && $toserial != "",function($query) use ($fromserial,$toserial){
-                $query->whereBetween('serial_no', [intval($fromserial),intval($toserial)])->get();
+                $query->whereBetween('serial_no',[intval($fromserial),intval($toserial)])->get();
             })
             ->when($fromserial != "" && $toserial == "",function($query) use ($fromserial,$toserial){
                 $query->where('serial_no','>=',intval($fromserial))->get();
