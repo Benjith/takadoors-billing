@@ -5,6 +5,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="csrf-token" content="{{ csrf_token() }}" />
   <title>{{ config('app.name', 'TAKA') }}</title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="{{ URL::asset('vendors/mdi/css/materialdesignicons.min.css') }}">
@@ -17,6 +18,9 @@
   <link rel="stylesheet" href="{{ URL::asset('css/style.css') }}">
   <!-- endinject -->
   <link rel="shortcut icon" href="{{ URL::asset('images/favicon.png') }}" />
+
+
+
 </head>
 <body>
   <div class="container-scroller">
@@ -70,7 +74,7 @@
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
           <li class="nav-item">
-            <a class="nav-link" href="{{ URL::to('/') }}">
+            <a class="nav-link" href="{{ URL::to('/home') }}">
               <i class="mdi mdi-home menu-icon"></i>
               <span class="menu-title">Order</span>
             </a>

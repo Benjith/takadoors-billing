@@ -23314,5 +23314,18 @@ span.choose {
   height:40px;
   margin: 10px 22px 0px 0px 
 }
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 13px;
+}
+ 
+.checkbox-container input[type="checkbox"] {
+  margin-right: 10px;
+}
+ 
+.checkbox-container label {
+  margin: 0;
+}
 
 
