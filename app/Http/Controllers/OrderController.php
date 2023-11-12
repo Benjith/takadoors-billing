@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Stock;
+use App\Models\Image;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\OrderExport;
@@ -220,6 +221,7 @@ class OrderController extends Controller
                         $serial_no = $last_order_id->serial_no+1;
                     }
                     $request['serial_no']=$serial_no;
+
                     $data = Order::create($request->all());
                     $stock_lat = Stock::find($result_stock->id);
                     $update_stock = $stock_lat->update([
@@ -252,6 +254,57 @@ class OrderController extends Controller
         return \Response::json($response);
     }
 
+    public function uploadImage(Request $request)
+    {
+        // return $request;
+        if(!$request->hasFile('image')) {
+            $response = array(
+                'hasError' => TRUE,
+                'errorCode' => 400,
+                'message' => 'upload_file_not_found',
+                'response' => null
+            );
+            return \Response::json($response);
+        }
+    
+        $allowedfileExtension=['pdf','jpg','png'];
+        $files = $request->file('image'); 
+        $errors = [];
+        $imageArray = array();
+        foreach ($files as $file) {  
+            $extension = $file->getClientOriginalExtension();
+            $check = in_array($extension,$allowedfileExtension);
+            if($check) {
+                foreach($request->image as $mediaFiles) {
+                    $path = $mediaFiles->store('images');
+                    $name = $mediaFiles->getClientOriginalName();
+                    array_push($imageArray,$path);
+                    //store image file into directory and db
+                    // $save = new Image();
+                    // $save->title = $name;
+                    // $save->path = $path;
+                    // $save->save();
+                }
+            } else {
+                $response = array(
+                    'hasError' => TRUE,
+                    'errorCode' => 422,
+                    'message' => 'invalid_file_format',
+                    'response' => null
+                );
+                return \Response::json($response);
+            }
+            $response = array(
+                'hasError' => false,
+                'errorCode' => -1,
+                'message' => 'File Uploaded Successfully',
+                'response' => $imageArray
+            );
+            return \Response::json($response);
+    
+        }
+    }
+   
     /**
      * Display the specified resource.
      *
