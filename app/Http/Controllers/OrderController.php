@@ -42,7 +42,6 @@ class OrderController extends Controller
             ->where('orders.is_active',1)
             ->orderBy('orders.id','DESC')
             ->get())->skip($start)->take($limit)->toArray();
-
             if($loggedinrole == 2){
                 $data = collect(Order::
                 select('orders.*','users.fullname as username')
@@ -223,6 +222,15 @@ class OrderController extends Controller
                     $request['serial_no']=$serial_no;
 
                     $data = Order::create($request->all());
+                    if(($request['image']) && !empty($request['image'])) {
+                        foreach($request['image'] as $path) {
+                            // store image file into directory and db
+                            $save = new Image();
+                            $save->order_id = $data->id;
+                            $save->path = $path;
+                            $save->save();
+                        }
+                    }
                     $stock_lat = Stock::find($result_stock->id);
                     $update_stock = $stock_lat->update([
                         'quantity'=>($result_stock->quantity)-(($request->quantity)*2),
@@ -276,14 +284,9 @@ class OrderController extends Controller
             $check = in_array($extension,$allowedfileExtension);
             if($check) {
                 foreach($request->image as $mediaFiles) {
-                    $path = $mediaFiles->store('images');
+                    $path = url('').'/'.$mediaFiles->store('images');
                     $name = $mediaFiles->getClientOriginalName();
                     array_push($imageArray,$path);
-                    //store image file into directory and db
-                    // $save = new Image();
-                    // $save->title = $name;
-                    // $save->path = $path;
-                    // $save->save();
                 }
             } else {
                 $response = array(
@@ -372,6 +375,18 @@ class OrderController extends Controller
                         if(($request->quantity)*2<=($old_order->quantity)*2){
                             $stock_update = $old_stock->update(['quantity'=>($old_stock->quantity+(($old_order->quantity)*2-($request->quantity)*2))]);
                             $data = $old_order->update($request->all());
+                           
+                            $delete_oldpath = Image::where('order_id',$id)->delete();
+                            if(($request['image']) && !empty($request['image'])) {
+                                foreach($request['image'] as $path) {
+                                    // store image file into directory and db
+                                    $save = new Image();
+                                    $save->order_id = $id;
+                                    $save->path = $path;
+                                    $save->save();
+                                }
+                            }
+                            
                             $response = array(
                                 'hasError' => false,
                                 'errorCode' => -1,
@@ -444,6 +459,16 @@ class OrderController extends Controller
                         'quantity'=>($result_stock->quantity)-(($request->quantity)*2),
                     ]);
                     $data = Order::whereId($id)->update($request->all()); 
+                    $delete_oldpath = Image::where('order_id',$id)->delete();
+                    if(($request['image']) && !empty($request['image'])) {
+                        foreach($request['image'] as $path) {
+                            // store image file into directory and db
+                            $save = new Image();
+                            $save->order_id = $id;
+                            $save->path = $path;
+                            $save->save();
+                        }
+                    }
                     // if($request->status == 4){
                     //     $gate_pass = Order::whereId($id)->update(['driver_name'=>$request->driver_name,'route'=>$request->route]);
                     //
