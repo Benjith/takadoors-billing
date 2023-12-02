@@ -42,6 +42,7 @@ class OrderController extends Controller
             ->where('orders.is_active',1)
             ->orderBy('orders.id','DESC')
             ->get())->skip($start)->take($limit)->toArray();
+
             if($loggedinrole == 2){
                 $data = collect(Order::
                 select('orders.*','users.fullname as username')
@@ -105,6 +106,14 @@ class OrderController extends Controller
                 ->orderBy('orders.id','DESC')
                 ->get())->skip($start)->take($limit)->toArray();
 
+            }
+            foreach($data as $key=>$order){
+                $order_images=Image::where('order_id',$order['id'])->get();
+                $image_arr = array();
+                foreach($order_images as $image){
+                    $image_arr[]=$image['path'];
+                }
+                $data[$key]['image'] = $image_arr;
             }
             $response = array(
                     'hasError' => false,
