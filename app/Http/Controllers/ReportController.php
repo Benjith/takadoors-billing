@@ -102,8 +102,8 @@ class ReportController extends Controller
         //   Session::put([$key=>$value]);
         // }
         $agents = User::all();
-        return response()->json(['msg'=>'success','response'=>$orders]);
-        // return view('welcome', array('agents'=>$agents,'code'=>$code ,'selected_agent'=>$agent,'orders' => $orders,'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial));
+         return response()->json(['msg'=>'success','response'=>$orders]);
+        //  return view('welcome', array('agents'=>$agents,'code'=>$code ,'selected_agent'=>$agent,'orders' => $orders,'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial));
     }
     public function print(Request $request) {
         try{  

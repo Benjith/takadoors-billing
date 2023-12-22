@@ -106,7 +106,7 @@
 
                       </tbody>
                     </table>
-{{ $orders->links('pagination::bootstrap-4') }}
+                  {{ $orders->links('pagination::bootstrap-4') }}
 
                   </div>
                 </div>
@@ -224,6 +224,7 @@ function submitClick(){
       success:function(response){
         $('#orderTable').DataTable();
         var dataTable = $("#orderTable").dataTable().api();
+        dataTable.clear();
         $.each(response['response']['data'], function(key, val) {
          
            tr = document.createElement("tr");
