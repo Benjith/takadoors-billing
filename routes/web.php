@@ -14,12 +14,15 @@ use App\Http\Controllers\Auth\LoginController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::get('/', [LoginController::class,'index']);
-Route::middleware(['auth'])->group(function () {
-    Route::any('/search', [ReportController::class,'search'])->name('search');
-    Route::any('/print/{from_date}/{to_date}/{fromserial}/{toserial}/{agent}/{code}', [ReportController::class,'print'])->name('print');
 
+Route::middleware(['web','auth'])->group(function () {
+// Route::group(['middleware' => 'web'], function () {
+    Route::get('/home', [App\Http\Controllers\ReportController::class, 'index'])->name('home');
+
+    Route::any('/search', [ReportController::class,'search'])->name('search');
+    // Route::any('/print/{from_date}/{to_date}/{fromserial}/{toserial}/{agent}/{code}', [ReportController::class,'print'])->name('print');
+    Route::any('/print', [ReportController::class,'print'])->name('print');
     //closing stock
     Route::get('/closing_stock', [ReportController::class,'closing_stock_report']);
     Route::get('/agent_wise', [ReportController::class,'agent_wise_report']);
@@ -30,6 +33,5 @@ Route::middleware(['auth'])->group(function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\ReportController::class, 'index'])->name('home');
 
 

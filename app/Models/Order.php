@@ -12,4 +12,8 @@ class Order extends Model
         'code','design','length','width','quantity','frame','remarks','thickness','user_id','last_modified_user_id','stock_id','status','serial_no',
         'driver_name','route'
     ];
+    public function images()
+    {
+        return $this->hasMany('App\Model\Image');
+    }
 }

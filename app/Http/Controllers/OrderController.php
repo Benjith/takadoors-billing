@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Stock;
+use App\Models\Image;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\OrderExport;
@@ -105,6 +106,14 @@ class OrderController extends Controller
                 ->orderBy('orders.id','DESC')
                 ->get())->skip($start)->take($limit)->toArray();
 
+            }
+            foreach($data as $key=>$order){
+                $order_images=Image::where('order_id',$order['id'])->get();
+                $image_arr = array();
+                foreach($order_images as $image){
+                    $image_arr[]=$image['path'];
+                }
+                $data[$key]['image'] = $image_arr;
             }
             $response = array(
                     'hasError' => false,
@@ -220,7 +229,17 @@ class OrderController extends Controller
                         $serial_no = $last_order_id->serial_no+1;
                     }
                     $request['serial_no']=$serial_no;
+
                     $data = Order::create($request->all());
+                    if(($request['image']) && !empty($request['image'])) {
+                        foreach($request['image'] as $path) {
+                            // store image file into directory and db
+                            $save = new Image();
+                            $save->order_id = $data->id;
+                            $save->path = $path;
+                            $save->save();
+                        }
+                    }
                     $stock_lat = Stock::find($result_stock->id);
                     $update_stock = $stock_lat->update([
                         'quantity'=>($result_stock->quantity)-(($request->quantity)*2),
@@ -252,6 +271,52 @@ class OrderController extends Controller
         return \Response::json($response);
     }
 
+    public function uploadImage(Request $request)
+    {
+        // return $request;
+        if(!$request->hasFile('image')) {
+            $response = array(
+                'hasError' => TRUE,
+                'errorCode' => 400,
+                'message' => 'upload_file_not_found',
+                'response' => null
+            );
+            return \Response::json($response);
+        }
+    
+        $allowedfileExtension=['pdf','jpg','png'];
+        $files = $request->file('image'); 
+        $errors = [];
+        $imageArray = array();
+        foreach ($files as $file) {  
+            $extension = $file->getClientOriginalExtension();
+            $check = in_array($extension,$allowedfileExtension);
+            if($check) {
+                foreach($request->image as $mediaFiles) {
+                    $path = url('').'/'.$mediaFiles->store('images');
+                    $name = $mediaFiles->getClientOriginalName();
+                    array_push($imageArray,$path);
+                }
+            } else {
+                $response = array(
+                    'hasError' => TRUE,
+                    'errorCode' => 422,
+                    'message' => 'invalid_file_format',
+                    'response' => null
+                );
+                return \Response::json($response);
+            }
+            $response = array(
+                'hasError' => false,
+                'errorCode' => -1,
+                'message' => 'File Uploaded Successfully',
+                'response' => $imageArray
+            );
+            return \Response::json($response);
+    
+        }
+    }
+   
     /**
      * Display the specified resource.
      *
@@ -319,6 +384,18 @@ class OrderController extends Controller
                         if(($request->quantity)*2<=($old_order->quantity)*2){
                             $stock_update = $old_stock->update(['quantity'=>($old_stock->quantity+(($old_order->quantity)*2-($request->quantity)*2))]);
                             $data = $old_order->update($request->all());
+                           
+                            $delete_oldpath = Image::where('order_id',$id)->delete();
+                            if(($request['image']) && !empty($request['image'])) {
+                                foreach($request['image'] as $path) {
+                                    // store image file into directory and db
+                                    $save = new Image();
+                                    $save->order_id = $id;
+                                    $save->path = $path;
+                                    $save->save();
+                                }
+                            }
+                            
                             $response = array(
                                 'hasError' => false,
                                 'errorCode' => -1,
@@ -391,6 +468,16 @@ class OrderController extends Controller
                         'quantity'=>($result_stock->quantity)-(($request->quantity)*2),
                     ]);
                     $data = Order::whereId($id)->update($request->all()); 
+                    $delete_oldpath = Image::where('order_id',$id)->delete();
+                    if(($request['image']) && !empty($request['image'])) {
+                        foreach($request['image'] as $path) {
+                            // store image file into directory and db
+                            $save = new Image();
+                            $save->order_id = $id;
+                            $save->path = $path;
+                            $save->save();
+                        }
+                    }
                     // if($request->status == 4){
                     //     $gate_pass = Order::whereId($id)->update(['driver_name'=>$request->driver_name,'route'=>$request->route]);
                     //

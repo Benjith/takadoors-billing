@@ -44,6 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/order/{id}', [OrderController::class,'update']);
     Route::post('/order',[OrderController::class,'store']);
     Route::delete('/order/{id}',[OrderController::class,'destroy']); 
+    Route::post('image-upload', [OrderController::class, 'uploadImage']);
 
     //Manage User
     Route::get('/user/list', [UserController::class,'index']);
