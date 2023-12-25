@@ -159,10 +159,6 @@ class OrderController extends Controller
                 'length'=>'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
                 'width'=>'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
                 'quantity'=>'required|numeric',
-                // 'frame'=>'required',
-                // 'remarks'=>'required',
-                // 'thickness'=>'required',
-                // 'status'=>'required',
             ]);
             $request['user_id']=$user->id;
             $request['last_modified_user_id']=$user->id;
