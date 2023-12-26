@@ -20,17 +20,17 @@
                             <th>User</th>
         </tr> <?php $quantity = 0; ?> 
         @foreach ($orders as $key => $order)
-        <?php $quantity = $quantity+$order['quantity'];?>
+        <?php $quantity = $quantity+$order->quantity;?>
         <tr>  
-        <td>{{$order['serial_no']}}</td>
-        <td>{{$order['thickness']}}</td>
-                            <td>{{$order['length']}}</td>
-                            <td>{{$order['width']}}</td>
-                            <td>{{$order['quantity']}}</td>
-                            <td>{{$order['design']}}</td>
-                            <td>{{$order['code']}}</td>
-                            <td>{{strtoupper($order['remarks'])}}</td>
-                            <td>{{$order['username']}}</td>                         
+        <td>{{$order->serial_no}}</td>
+        <td>{{$order->thickness}}</td>
+                            <td>{{$order->length}}</td>
+                            <td>{{$order->width}}</td>
+                            <td>{{$order->quantity}}</td>
+                            <td>{{$order->design}}</td>
+                            <td>{{$order->code}}</td>
+                            <td>{{strtoupper($order->remarks)}}</td>
+                            <td>{{$order->username}}</td>                         
 
         </tr> 
         @endforeach 

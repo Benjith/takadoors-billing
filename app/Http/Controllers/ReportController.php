@@ -97,114 +97,18 @@ class ReportController extends Controller
         })
         ->where('is_active',1)
         ->orderBy('orders.id','ASC')
-        ->select('orders.id','thickness','length','users.fullname as username','width','quantity','design','code','remarks','orders.status','user_id','serial_no')->paginate(5);
+        ->select('orders.id','thickness','length','users.fullname as username','width','quantity','design','code','remarks','orders.status','user_id','serial_no')->paginate(20);
         // foreach($orders as $key=>$value) {
         //   Session::put([$key=>$value]);
         // }
         $agents = User::all();
-         return response()->json(['msg'=>'success','response'=>$orders]);
-        //  return view('welcome', array('agents'=>$agents,'code'=>$code ,'selected_agent'=>$agent,'orders' => $orders,'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial));
+        //  return response()->json(['msg'=>'success','response'=>$orders]);
+          return view('welcome', array('agents'=>$agents,'code'=>$code ,'selected_agent'=>$agent,'orders' => $orders,'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial));
     }
-    public function print(Request $request) {
-        try{  
-            if(is_countable($request->orderList) && count($request->orderList)){
-                $data=['orders'=>$request->orderList,'from_date'=>$request->fromdate,'to_date'=>$request->todate,'fromserial'=>$request->fromserial,'toserial'=>$request->toserial];
-                ini_set('memory_limit', '512M');               
-                $pdf = PDF::loadView('order_pdf',$data);
-                $report = 'report_'.rand(10,100).'.pdf';
-                $pdf->save(public_path('/reports/'.$report));
-                $file= public_path('/reports/'.$report);
-                    // $headers = array(
-                    //         'Content-Type: application/pdf',
-                    //         );
-                return response()->download($file);
-                // return Response::download($file, 'order.pdf');
-            }else{
-                return response()->json(['msg'=>'success','response'=>'No Data']);
-                // Session::flash('error', 'No Data to Print');
-                // return redirect(url('/'));
-            }
-            return view('welcome', array('orders' => $orders,'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial,'selected_agent'=>$agent));
-        }catch(Exception $e){
-            return redirect(url('/'));
-        }
-    }
-    // public function print(Request $request,$from_date,$to_date,$fromserial,$toserial,$agent,$code) {
+    // public function print(Request $request) {
     //     try{  
-
-    //         if($from_date == "null"){
-    //             $from_date = '';
-    //         }
-    //         if($to_date == "null"){
-    //             $to_date = '';
-    //         }
-    //         if($fromserial == "null"){
-    //             $fromserial = '';
-    //         }
-    //         if($toserial == "null"){
-    //             $toserial = '';
-    //         }
-    //         if($agent == "null"){
-    //             $agent = '';
-    //         }
-    //         if($code == "null"){
-    //             $code = '';
-    //         }
-    //         $orders = DB::table('orders')
-    //         ->when($agent == "" && $code == ""  && $from_date != "" && $to_date != "",function($query) use ($agent,$from_date,$to_date){
-    //             $query->whereBetween('created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])->get();
-    //         })
-    //         ->when($agent == "" && $code == "" && $from_date != "" && $to_date == "",function($query) use ($agent,$from_date,$to_date){
-    //             $query->where('created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")->get();
-    //         })
-    //         ->when($agent != "" && $code == "" && $from_date != "" && $to_date != "",function($query) use ($agent,$from_date,$to_date){
-    //             $query->whereBetween('created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])
-    //             ->where('user_id',$agent)->get();
-    //         })
-    //         ->when($agent != ""  && $code == "" && $from_date != "" && $to_date == "",function($query) use ($agent,$from_date,$to_date){
-    //             $query->where('created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")
-    //             ->where('user_id',$agent)->get();
-    //         })
-    //         ->when($agent != ""  && $code == "" && $from_date == "" && $to_date == "",function($query) use ($agent,$from_date,$to_date){
-    //             $query->where('user_id',$agent)->get();
-    //         })
-    //         ->when($agent == ""  && $code != "" && $from_date == "" && $to_date == "",function($query) use ($code,$from_date,$to_date){
-    //             $query->where('code',$code)->get();
-    //         })
-    //         ->when($agent == ""  && $code != "" && $from_date != "" && $to_date == "",function($query) use ($code,$from_date,$to_date){
-    //             $query->where('created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")
-    //             ->where('code',$code)->get();
-    //         })
-    //         ->when($agent == ""  && $code != "" && $from_date != "" && $to_date != "",function($query) use ($code,$from_date,$to_date){
-    //             $query->whereBetween('created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])
-    //             ->where('code',$code)->get();
-    //         })
-    //         ->when($agent != ""  && $code != "" && $from_date == "" && $to_date == "",function($query) use ($code,$agent,$from_date,$to_date){
-    //             $query->where('code',$code)
-    //             ->where('user_id',$agent)->get();
-    //         })
-    //         ->when($agent != ""  && $code != "" && $from_date != "" && $to_date == "",function($query) use ($code,$agent,$from_date,$to_date){
-    //             $query->where('code',$code)
-    //             ->where('user_id',$agent)
-    //             ->where('created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")->get();
-    //         })
-    //         ->when($agent != ""  && $code != "" && $from_date != "" && $to_date != "",function($query) use ($code,$agent,$from_date,$to_date){
-    //             $query->where('code',$code)
-    //             ->where('user_id',$agent)
-    //             ->whereBetween('created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])
-    //             ->get();
-    //         })
-    //         ->when($fromserial != "" && $toserial != "",function($query) use ($fromserial,$toserial){
-    //             $query->whereBetween('serial_no',[intval($fromserial),intval($toserial)])->get();
-    //         })
-    //         ->when($fromserial != "" && $toserial == "",function($query) use ($fromserial,$toserial){
-    //             $query->where('serial_no','>=',intval($fromserial))->get();
-    //         })
-    //         ->where('is_active',1)
-    //         ->orderBy('orders.id','ASC')
-    //         ->select('id','thickness','length','width','quantity','design','code','remarks','status','user_id','serial_no')->get();
-    //         if(!$orders->isEmpty()){
-    //             $data=['orders'=>$orders,'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial];
+    //         if(is_countable($request->orderList) && count($request->orderList)){
+    //             $data=['orders'=>$request->orderList,'from_date'=>$request->fromdate,'to_date'=>$request->todate,'fromserial'=>$request->fromserial,'toserial'=>$request->toserial];
     //             ini_set('memory_limit', '512M');               
     //             $pdf = PDF::loadView('order_pdf',$data);
     //             $report = 'report_'.rand(10,100).'.pdf';
@@ -213,17 +117,114 @@ class ReportController extends Controller
     //                 // $headers = array(
     //                 //         'Content-Type: application/pdf',
     //                 //         );
-        
-    //             return Response::download($file, 'order.pdf');
+    //             return response()->download($file);
+    //             // return Response::download($file, 'order.pdf');
     //         }else{
-    //             Session::flash('error', 'No Data to Print');
-    //             return redirect(url('/'));
+    //             return response()->json(['msg'=>'success','response'=>'No Data']);
+    //             // Session::flash('error', 'No Data to Print');
+    //             // return redirect(url('/'));
     //         }
     //         return view('welcome', array('orders' => $orders,'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial,'selected_agent'=>$agent));
     //     }catch(Exception $e){
     //         return redirect(url('/'));
     //     }
     // }
+    public function print(Request $request,$from_date,$to_date,$fromserial,$toserial,$agent,$code) {
+        try{  
+
+            if($from_date == "null"){
+                $from_date = '';
+            }
+            if($to_date == "null"){
+                $to_date = '';
+            }
+            if($fromserial == "null"){
+                $fromserial = '';
+            }
+            if($toserial == "null"){
+                $toserial = '';
+            }
+            if($agent == "null"){
+                $agent = '';
+            }
+            if($code == "null"){
+                $code = '';
+            }
+            $orders = DB::table('orders')
+            ->leftjoin('users','users.id','=','orders.user_id')
+            ->when($agent == "" && $code == ""  && $from_date != "" && $to_date != "",function($query) use ($agent,$from_date,$to_date){
+                $query->whereBetween('orders.created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])->get();
+            })
+            ->when($agent == "" && $code == "" && $from_date != "" && $to_date == "",function($query) use ($agent,$from_date,$to_date){
+                $query->where('orders.created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")->get();
+            })
+            ->when($agent != "" && $code == "" && $from_date != "" && $to_date != "",function($query) use ($agent,$from_date,$to_date){
+                $query->whereBetween('orders.created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])
+                ->where('user_id',$agent)->get();
+            })
+            ->when($agent != ""  && $code == "" && $from_date != "" && $to_date == "",function($query) use ($agent,$from_date,$to_date){
+                $query->where('orders.created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")
+                ->where('user_id',$agent)->get();
+            })
+            ->when($agent != ""  && $code == "" && $from_date == "" && $to_date == "",function($query) use ($agent,$from_date,$to_date){
+                $query->where('user_id',$agent)->get();
+            })
+            ->when($agent == ""  && $code != "" && $from_date == "" && $to_date == "",function($query) use ($code,$from_date,$to_date){
+                $query->where('code',$code)->get();
+            })
+            ->when($agent == ""  && $code != "" && $from_date != "" && $to_date == "",function($query) use ($code,$from_date,$to_date){
+                $query->where('orders.created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")
+                ->where('code',$code)->get();
+            })
+            ->when($agent == ""  && $code != "" && $from_date != "" && $to_date != "",function($query) use ($code,$from_date,$to_date){
+                $query->whereBetween('orders.created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])
+                ->where('code',$code)->get();
+            })
+            ->when($agent != ""  && $code != "" && $from_date == "" && $to_date == "",function($query) use ($code,$agent,$from_date,$to_date){
+                $query->where('code',$code)
+                ->where('user_id',$agent)->get();
+            })
+            ->when($agent != ""  && $code != "" && $from_date != "" && $to_date == "",function($query) use ($code,$agent,$from_date,$to_date){
+                $query->where('code',$code)
+                ->where('user_id',$agent)
+                ->where('orders.created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")->get();
+            })
+            ->when($agent != ""  && $code != "" && $from_date != "" && $to_date != "",function($query) use ($code,$agent,$from_date,$to_date){
+                $query->where('code',$code)
+                ->where('user_id',$agent)
+                ->whereBetween('orders.created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])
+                ->get();
+            })
+            ->when($fromserial != "" && $toserial != "",function($query) use ($fromserial,$toserial){
+                $query->whereBetween('serial_no',[intval($fromserial),intval($toserial)])->get();
+            })
+            ->when($fromserial != "" && $toserial == "",function($query) use ($fromserial,$toserial){
+                $query->where('serial_no','>=',intval($fromserial))->get();
+            })
+            ->where('is_active',1)
+            ->orderBy('orders.id','ASC')
+            ->select('orders.id','thickness','length','width','users.fullname as username','quantity','design','code','remarks','status','user_id','serial_no')->get();
+            if(!$orders->isEmpty()){
+                $data=['orders'=>$orders,'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial];
+                ini_set('memory_limit', '512M');               
+                $pdf = PDF::loadView('order_pdf',$data);
+                $report = 'report_'.rand(10,100).'.pdf';
+                $pdf->save(public_path('/reports/'.$report));
+                $file= public_path('/reports/'.$report);
+                    // $headers = array(
+                    //         'Content-Type: application/pdf',
+                    //         );
+        
+                return Response::download($file, 'order.pdf');
+            }else{
+                Session::flash('error', 'No Data to Print');
+                return redirect(url('/'));
+            }
+            return view('welcome', array('orders' => $orders,'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial,'selected_agent'=>$agent));
+        }catch(Exception $e){
+            return redirect(url('/'));
+        }
+    }
 
     public function closing_stock_report()
     {
