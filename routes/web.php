@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Auth\LoginController;
 
 /*
@@ -28,6 +29,11 @@ Route::middleware(['web','auth'])->group(function () {
     Route::get('/agent_wise', [ReportController::class,'agent_wise_report']);
     Route::get('/gate_pass', [ReportController::class,'gate_pass_report']);
     Route::any('/agent_search', [ReportController::class,'agent_report_search'])->name('agent_search');
+
+    Route::get('/orders', [App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders');
+
+    Route::post('/orders', [App\Http\Controllers\Admin\OrderController::class, 'create'])->name('order.bulk.create');
+
 });
 
 

@@ -97,6 +97,12 @@
               <span class="menu-title">Gate Pass Report</span>
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ URL::to('/orders') }}">
+              <i class="mdi mdi-routes menu-icon"></i>
+              <span class="menu-title">Create Order</span>
+            </a>
+          </li>
         </ul>
       </nav>
       @yield('content')
