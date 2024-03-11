@@ -44,7 +44,7 @@
                             <th>Width</th>
                             <th>Quantity</th>
                             <th>Design</th>
-                            <th>Frame</th>
+                            <th>PVC Model</th>
                             <th>Code</th>
                             <th>Remarks</th>
                         </tr>

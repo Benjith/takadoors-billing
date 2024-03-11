@@ -34,6 +34,7 @@ Route::middleware(['web','auth'])->group(function () {
 
     Route::post('/orders', [App\Http\Controllers\Admin\OrderController::class, 'create'])->name('order.bulk.create');
 
+    
 });
 
 
