@@ -23,6 +23,7 @@ class OrderController extends Controller
     public function index()
     {
         try{
+            
             $orders = Order::where('is_active',1)->orderBy('orders.id','ASC')->paginate(20); 
             // print_r(Session::all());exit();  
             $from_date = "null";

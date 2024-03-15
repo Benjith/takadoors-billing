@@ -51,7 +51,7 @@
                       </thead>
                       <tbody>
                         <tr>
-                                            <td class="serial-number">1</td>
+                                          <td class="serial-number">1</td>
                                             <td><textarea class="form-control" name="thickness" rows="1"></textarea></td>
                                             <td><textarea class="form-control" name="length" rows="1"></textarea></td>
                                           <td><textarea class="form-control" name="width" rows="1"></textarea></td>
