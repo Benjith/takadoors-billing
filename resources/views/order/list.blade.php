@@ -86,9 +86,8 @@ $(document).ready(function(){
             $(this).find('.serial-number').text(index + 1);
         });
     }
-    
+    var datarow = 2;
     $("#addRowLink").click(function(){
-        var datarow = 2;
         var lastRowCodeValue = $("#orderTable tbody tr:last textarea[name='code']").val();
         if(lastRowCodeValue == undefined){
           lastRowCodeValue = '';
