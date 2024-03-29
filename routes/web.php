@@ -34,7 +34,19 @@ Route::middleware(['web','auth'])->group(function () {
 
     Route::post('/orders', [App\Http\Controllers\Admin\OrderController::class, 'create'])->name('order.bulk.create');
 
+    Route::get('/production', [App\Http\Controllers\Admin\OrderController::class, 'getProductionOrders'])->name('productionorders');
+    Route::post('/production', [App\Http\Controllers\Admin\OrderController::class, 'update'])->name('updateOrders');
+    Route::any('/production-print', [App\Http\Controllers\Admin\OrderController::class,'productionPrint'])->name('print');
     
+    Route::get('/dispatch', [App\Http\Controllers\Admin\OrderController::class, 'getDispatchOrders'])->name('dispatchorders');
+    Route::any('/dispatch_search', [App\Http\Controllers\Admin\OrderController::class, 'dispatchSearch'])->name('dispatch_search');
+
+    Route::get('/driver', [App\Http\Controllers\Admin\OrderController::class, 'getDriverOrders'])->name('driverorders');
+    // Route::any('/driver-search', [App\Http\Controllers\Admin\OrderController::class, 'getDriverOrdersSearch'])->name('driver_order_search');
+
+    Route::get('/get-data', [App\Http\Controllers\Admin\OrderController::class, 'getDriverOrdersSearch'])->name('getData');
+    Route::any('/driver-print', [App\Http\Controllers\Admin\OrderController::class,'driverPrint'])->name('printDriverOrder');
+
 });
 
 
