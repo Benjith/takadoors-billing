@@ -150,7 +150,8 @@
               } 
               if (response.pdf2) {
                 window.open('/reports/' + response.pdf2, '_blank');
-              }                
+              } 
+              location.reload();               
             },
             error: function(blob) {
             console.log(blob);

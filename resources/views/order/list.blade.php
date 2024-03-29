@@ -179,6 +179,7 @@ $(document).ready(function(){
 
             // Push the rowData object into the formData array
             formData.push(rowData);
+          });
             $.ajax({
               url: '{{ route("order.bulk.create") }}', // Replace with your backend endpoint
               type: 'POST',
@@ -205,9 +206,6 @@ $(document).ready(function(){
                   console.error('Error:', error);
               }
             });
-
-        });
-
         // Log the collected data (you can replace this with your actual form submission logic)
         console.log(formData);
     });

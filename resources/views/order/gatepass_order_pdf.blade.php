@@ -8,7 +8,8 @@
                           
                             <th>Code</th>
                             <th>No.s</th>
-        </tr> <?php $Quantity = 0; ?> 
+        </tr>
+         <?php $Quantity = 0; ?> 
         @foreach ($orders as $code => $totalQuantity)
             <tr>
                 <td>{{ $code }}</td>
@@ -19,7 +20,7 @@
             @endphp
         @endforeach 
     </table>
-   <p><b>Total Quantity : </b><?php if(isset($totalQuantity)) echo $totalQuantity; ?></p>
+   <p><b>Total Quantity : </b><?php if(isset($Quantity)) echo $Quantity; ?></p>
 
 </div>  
 <style type="text/css">  

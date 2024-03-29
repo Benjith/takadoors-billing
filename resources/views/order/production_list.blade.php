@@ -87,6 +87,8 @@
                         </tr> -->
                       </tbody>
                     </table>
+                    {{ $orders->links('pagination::bootstrap-4') }}
+
                     <div style="padding-top:30px;padding-bottom:40px;">
                     <button style="margin-left:800px;" class="btn btn-primary mt-2 mt-xl-0" type="submit" id="submitBtn">Update</button>
 </div>
