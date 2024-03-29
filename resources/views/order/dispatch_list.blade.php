@@ -83,7 +83,8 @@
 <script>
 $(document).ready(function() {
     $('#dispatch_table').DataTable({
-        "order": [] // Disable automatic sorting
+        "order": [], // Disable automatic sorting
+        paging: false,
     });
 });
 </script>
