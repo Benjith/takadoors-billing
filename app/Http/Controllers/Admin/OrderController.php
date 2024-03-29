@@ -34,7 +34,7 @@ class OrderController extends Controller
     {
         try{
             $user = $request->user();
-            $formData = $request->input('formData'); 
+            $formData = $request->input('formData');
             foreach ($formData as $key=>$row) {
                 $last_order_id = Order::whereMonth('created_at', date('m'))
                     ->whereYear('created_at', date('Y'))
@@ -65,7 +65,7 @@ class OrderController extends Controller
     public function getProductionOrders()
     {
         try{
-            $orders = Order::where('is_active',1)->where('status',1)->orderBy('orders.id','ASC')->get(); 
+            $orders = Order::where('is_active',1)->where('status',1)->orderBy('orders.id','ASC')->paginate(20); 
             return view('order.production_list',compact('orders'));
         }catch (Exception $ex) {
             return redirect('/');
@@ -127,7 +127,7 @@ class OrderController extends Controller
             $from_date = "null";
             $to_date = "null";
             $code = "";
-            $orders = Order::where('is_active',1)->where('status',3)->orderBy('orders.id','ASC')->paginate(10); 
+            $orders = Order::where('is_active',1)->where('status',3)->orderBy('orders.id','ASC')->paginate(20); 
             return view('order.dispatch_list',compact('orders','from_date','to_date','code'));
        }catch (Exception $ex) {
            return redirect('/');
@@ -233,6 +233,10 @@ class OrderController extends Controller
                 $pdf2->save(public_path('/reports/'.$gatepass_report));
                 $file2= public_path('/reports/'.$gatepass_report);
 
+                foreach ($previousData as $order) {
+                    $code = $order->code; 
+                    Order::where('code',$code)->update(['status' => 4]);
+                }
 
                 return response()->json([
                     'pdf1' => $dispatch_report,
