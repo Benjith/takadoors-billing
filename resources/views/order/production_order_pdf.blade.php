@@ -2,7 +2,6 @@
 <div class="container">  
 <h3 style="text-align: center;" class="heading-section">PRODUCTION ORDER LIST</h3>
     <br/> 
-
     <table style="width: 100%; background: #f7f7f7;">  
         <tr>  
         <th>SI.No.</th>
