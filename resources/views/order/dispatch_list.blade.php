@@ -86,5 +86,6 @@ $(document).ready(function() {
         "order": [], // Disable automatic sorting
         paging: false,
     });
+    
 });
 </script>
