@@ -176,7 +176,6 @@ $(document).ready(function(){
                 var columnValue = $(this).val(); // Get the value of the textarea
                 rowData[columnName] = columnValue; // Store the data in the rowData object
             });
-
             // Push the rowData object into the formData array
             formData.push(rowData);
           });

@@ -226,7 +226,6 @@ class OrderController extends Controller
                         $sumByCode[$code] = $quantity;
                     }
                 }
-
                 $data=['orders'=>$sumByCode,'driverName'=>$driverName];    
                 $pdf2 = PDF::loadView('order/gatepass_order_pdf',$data);
                 $gatepass_report = 'gatepass_'.rand(10,100).'.pdf';

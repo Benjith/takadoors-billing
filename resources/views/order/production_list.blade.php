@@ -83,7 +83,6 @@
                                            <td><textarea class="form-control" name="frame" rows="1" cols="30" data-row="1" data-column="6"></textarea></td>
                                            <td><textarea class="form-control" name="code" rows="1" cols="30" data-row="1" data-column="7"></textarea></td>
                                            <td><textarea class="form-control" name="remarks" rows="1" cols="40" data-row="1" data-column="8"></textarea></td>
-
                         </tr> -->
                       </tbody>
                     </table>

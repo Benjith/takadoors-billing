@@ -135,9 +135,6 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Include CSRF token in headers
             },
             data: requestData,
-            // xhrFields: {
-            //     responseType: 'blob'
-            // },
             success:function(response){
               console.log(response);
               if (response.pdf1) {

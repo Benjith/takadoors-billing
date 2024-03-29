@@ -27,12 +27,12 @@
                             <td>{{$order->frame}}</td>
                             <td>{{$order->code}}</td>
                             <td>{{strtoupper($order->remarks)}}</td>
+                            
 
         </tr> 
         @endforeach 
     </table>
    <p><b>Total Quantity : </b><?php if(isset($quantity)) echo $quantity; ?></p>
-
 </div>  
 <style type="text/css">  
     table, td,tr,th{  
