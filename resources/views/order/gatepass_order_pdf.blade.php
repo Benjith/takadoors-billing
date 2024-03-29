@@ -15,6 +15,7 @@
                 <td>{{ $code }}</td>
                 <td>{{ $totalQuantity }}</td>
             </tr>
+            
             @php
                 $Quantity += $totalQuantity; // Add current order's quantity to total
             @endphp
