@@ -608,7 +608,6 @@ class OrderController extends Controller
     public function clear_orders_data(Request $request)
     {
         try{
-            
                 Image::query()->delete();
                 Order::query()->delete();
                 $response = array(
