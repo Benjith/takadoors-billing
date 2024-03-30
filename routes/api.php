@@ -53,6 +53,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 });
 Route::get('/export',[OrderController::class, 'get_order_data'])->name('order.export');
+Route::get('/order/clear',[OrderController::class, 'clear_orders_data'])->name('order.clear');
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
