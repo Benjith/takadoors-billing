@@ -605,4 +605,26 @@ class OrderController extends Controller
         }
         return \Response::json($response);
     }
+    public function clear_orders_data(Request $request)
+    {
+        try{
+            
+                Image::query()->delete();
+                Order::query()->delete();
+                $response = array(
+                    'hasError' => false,
+                    'errorCode' => -1,
+                    'message' => 'Success',
+                    'response' => null,
+                );  
+        }catch (Exception $ex) {
+            $response = array(
+                'hasError' => TRUE,
+                'errorCode' => 5,
+                'message' => 'Server Error.' . $ex->getMessage(),
+                'response' => null
+            );
+        }
+        return \Response::json($response);
+    }
 }
