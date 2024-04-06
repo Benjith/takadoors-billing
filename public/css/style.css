@@ -21620,7 +21620,7 @@ code {
 }
 
 .form-control, .dataTables_wrapper select {
-  border: 1px solid #f3f3f3;
+  border: 1px solid #0d0d0d;
   font-weight: 400;
   font-size: 0.875rem;
 }

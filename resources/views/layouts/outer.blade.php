@@ -17,7 +17,7 @@
   <!-- inject:css -->
   <link rel="stylesheet" href="{{ URL::asset('css/style.css') }}">
   <!-- endinject -->
-  <link rel="shortcut icon" href="{{ URL::asset('images/favicon.png') }}" />
+  <link rel="shortcut icon" href="{{ URL::asset('images/logo.jpg') }}" />
 
 
 
@@ -95,6 +95,24 @@
             <a class="nav-link" href="{{ URL::to('/gate_pass') }}">
               <i class="mdi mdi-routes menu-icon"></i>
               <span class="menu-title">Gate Pass Report</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ URL::to('/orders') }}">
+              <i class="mdi mdi-numeric-1-box menu-icon"></i>
+              <span class="menu-title">Create Order</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ URL::to('/production') }}">
+              <i class="mdi mdi-numeric-2-box menu-icon"></i>
+              <span class="menu-title">Production</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ URL::to('/dispatch') }}">
+              <i class="mdi mdi-numeric-3-box menu-icon"></i>
+              <span class="menu-title">Dispatch</span>
             </a>
           </li>
         </ul>
