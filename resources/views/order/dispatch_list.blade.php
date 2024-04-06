@@ -56,7 +56,8 @@
                       <?php $count=1;?>
                         @foreach ($orders as $order)
                         <tr>
-                        <td style="width:5%">{{$order->serial_no}}</td>
+                        <td style="width:5%">{{$order->serial_no}}<br>
+                        <a style="text-decoration:none;"href="{{ route('orders.qrcode', ['id' => $order->id]) }}">Generate QR</a></td>
                             <td>{{$order->thickness}}</td>
                             <td>{{$order->length}}</td>
                             <td>{{$order->width}}</td>

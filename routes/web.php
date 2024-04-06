@@ -39,6 +39,8 @@ Route::middleware(['web','auth'])->group(function () {
 
     Route::get('/dispatch', [App\Http\Controllers\Admin\OrderController::class, 'getDispatchOrders'])->name('dispatchorders');
     Route::any('/dispatch_search', [App\Http\Controllers\Admin\OrderController::class, 'dispatchSearch'])->name('dispatch_search');
+
+    Route::get('/order/{id}/qrcode', [App\Http\Controllers\Admin\OrderController::class, 'generateQRCode'])->name('orders.qrcode');
 });
 
 

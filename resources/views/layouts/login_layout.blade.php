@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	
 	<link rel="stylesheet" href="{{ asset('css/login.css') }}">
-
+	<link rel="shortcut icon" href="{{ URL::asset('images/logo.jpg') }}" />
 	</head>
 	<body>
 	<section class="ftco-section">

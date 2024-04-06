@@ -13,6 +13,11 @@ use PDF;
 use Response;
 use Session;
 use DataTables;
+use BaconQrCode\Encoder\QrCode;
+use BaconQrCode\Renderer\Image\Png;
+// use Illuminate\Support\Facades\Response;
+
+
 
 class OrderController extends Controller
 {
@@ -163,4 +168,16 @@ class OrderController extends Controller
     ->paginate(20);
     return view('order.dispatch_list', array('code'=>$code,'orders' => $orders,'from_date'=>$from_date,'to_date'=>$to_date));
 }
+
+    public function generateQRCode($id)
+    {
+        $order = Order::find($id);
+        $data=['order'=>$order];
+        ini_set('memory_limit', '512M');               
+        $pdf = PDF::loadView('order/qrcode',$data);
+        $qrcode = 'qr_'.rand(10,100).'.pdf';
+        $pdf->save(public_path('/qrcodes/'.$qrcode));
+        $file= public_path('/qrcodes/'.$qrcode);
+        return Response::download($file, 'qrcode_'.$order->serial_no.'.pdf');
+    }
 }

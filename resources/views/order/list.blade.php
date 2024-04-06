@@ -44,7 +44,7 @@
                             <th>Width</th>
                             <th>Quantity</th>
                             <th>Design</th>
-                            <th> PVC Model  </th>
+                            <th>  Frame  </th>
                             <th> Code </th>
                             <th>Remarks</th>
                         </tr>
@@ -53,12 +53,12 @@
                         <tr>
                                           <td class="serial-number">1</td>
                                             <td><textarea class="form-control" name="thickness" rows="1" cols="20" data-row="1" data-column="1"></textarea></td>
-                                            <td><textarea class="form-control" name="length" rows="1"cols="20" data-row="1" data-column="2"></textarea></td>
-                                          <td><textarea class="form-control" name="width" rows="1"cols="20" data-row="1" data-column="3"></textarea></td>
+                                            <td><textarea class="form-control" name="length" rows="1"cols="30" data-row="1" data-column="2"></textarea></td>
+                                          <td><textarea class="form-control" name="width" rows="1"cols="30" data-row="1" data-column="3"></textarea></td>
                                           <td><textarea class="form-control" name="quantity" rows="1"cols="20" data-row="1" data-column="4"></textarea></td>
                                            <td><textarea class="form-control" name="design" rows="1" cols="30" data-row="1" data-column="5"></textarea></td>
-                                           <td><textarea class="form-control" name="frame" rows="1" cols="30" data-row="1" data-column="6"></textarea></td>
-                                           <td><textarea class="form-control" name="code" rows="1" cols="30" data-row="1" data-column="7"></textarea></td>
+                                           <td><textarea class="form-control" name="frame" rows="1" cols="40" data-row="1" data-column="6"></textarea></td>
+                                           <td><textarea class="form-control" name="code" rows="1" cols="40" data-row="1" data-column="7"></textarea></td>
                                            <td><textarea class="form-control" name="remarks" rows="1" cols="40" data-row="1" data-column="8"></textarea></td>
 
                         </tr>

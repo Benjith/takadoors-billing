@@ -14,13 +14,16 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
+        // Role::insert([
+        //     ['name'=>'Admin'],
+        //     ['name'=>'Marketing'],
+        //     ['name'=>'Production'],
+        //     ['name'=>'Finishing'],
+        //     ['name'=>'Dispatch'],
+        //     ['name'=>'Billing'],
+        // ]);
         Role::insert([
-            ['name'=>'Admin'],
-            ['name'=>'Marketing'],
-            ['name'=>'Production'],
-            ['name'=>'Finishing'],
-            ['name'=>'Dispatch'],
-            ['name'=>'Billing'],
+            ['name'=>'Dealer'],
         ]);
     }
 }
