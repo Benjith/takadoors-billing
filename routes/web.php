@@ -47,6 +47,9 @@ Route::middleware(['web','auth'])->group(function () {
     Route::get('/get-data', [App\Http\Controllers\Admin\OrderController::class, 'getDriverOrdersSearch'])->name('getData');
     Route::any('/driver-print', [App\Http\Controllers\Admin\OrderController::class,'driverPrint'])->name('printDriverOrder');
 
+    Route::get('/billing', [App\Http\Controllers\Admin\OrderController::class, 'getBilling'])->name('billing');
+
+
 });
 
 

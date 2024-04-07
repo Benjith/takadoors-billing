@@ -121,6 +121,12 @@
               <span class="menu-title">Driver/Route</span>
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ URL::to('/billing') }}">
+              <i class="mdi mdi-numeric-4-box menu-icon"></i>
+              <span class="menu-title">Billing</span>
+            </a>
+          </li>
         </ul>
       </nav>
       @yield('content')

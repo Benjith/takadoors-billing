@@ -13,6 +13,7 @@ use PDF;
 use Response;
 use Session;
 use DataTables;
+use Carbon\Carbon;
 
 class OrderController extends Controller
 {
@@ -254,6 +255,20 @@ class OrderController extends Controller
             return view('welcome', array('orders' => $orders,'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial,'selected_agent'=>$agent));
         }catch(Exception $e){
             return redirect(url('/'));
+        }
+    }
+
+    public function getBilling(Request $request)
+    {
+        try{
+            $orders = Order::
+            where('is_active',1)->where('status',4)
+            ->where(
+                'created_at', '>=', Carbon::now()->subMonth()->toDateTimeString()
+            )->orderBy('orders.id','ASC')->get(); 
+            return view('order.billing_orders_list',compact('orders'));
+        }catch (Exception $ex) {
+            return redirect('/');
         }
     }
 
