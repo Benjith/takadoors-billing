@@ -21,6 +21,7 @@
                 <b>Serial No : {{$order->serial_no}}</b>
                 <img src="data:image/png;base64, {!! base64_encode(QrCode::size(200)->generate($order)) !!} "><br>
                 {!! QrCode::size(200)->generate($order) !!}
+                
                 Length : {{$order->length}}
                 Width : {{$order->width}}<br>
                 Design : {{$order->design}}
