@@ -2,6 +2,10 @@
 <div class="container">  
 <h3 style="text-align: center;" class="heading-section">PRODUCTION ORDER LIST</h3>
     <br/> 
+    @php
+    use Carbon\Carbon;
+    @endphp
+    <p><b>Date:</b> <b>{{ Carbon::now()->format('d-m-Y') }}</b></p>
     <table style="width: 100%; background: #f7f7f7;">  
         <tr>  
         <th>SI.No.</th>
@@ -13,10 +17,11 @@
                             <th>PVC Model </th>
                             <th>Code</th>
                             <th>Remarks</th>
-                            <th>User</th>
         </tr> <?php $quantity = 0; ?> 
         @foreach ($orders as $key => $order)
+        @if (is_numeric($quantity) && is_int((int)$quantity))
         <?php $quantity = $quantity+$order->quantity;?>
+        @endif
         <tr>  
         <td>{{$order->serial_no}}</td>
         <td>{{$order->thickness}}</td>
@@ -26,8 +31,7 @@
                             <td>{{$order->design}}</td>
                             <td>{{$order->frame}}</td>
                             <td>{{$order->code}}</td>
-                            <td>{{strtoupper($order->remarks)}}</td>
-                            <td>{{$order->user->fullname}}</td>                         
+                            <td>{{strtoupper($order->remarks)}}</td>                
 
         </tr> 
         @endforeach 

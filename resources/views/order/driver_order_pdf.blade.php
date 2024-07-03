@@ -2,6 +2,7 @@
 <div class="container">  
 <h3 style="text-align: center;" class="heading-section">DISPATCH LIST</h3>
     <br/> 
+    
     <p><b>Driver Name:</b> {{$driverName}} </p>
     <table style="width: 100%; background: #f7f7f7;">  
         <tr>  

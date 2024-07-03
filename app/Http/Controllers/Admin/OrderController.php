@@ -165,6 +165,36 @@ class OrderController extends Controller
     return view('order.dispatch_list', array('code'=>$code,'orders' => $orders,'from_date'=>$from_date,'to_date'=>$to_date));
 }
 
+public function billingSearch(Request $request) {
+    $from_date = $request->get('fromdate')?$request->get('fromdate'):'';
+    $to_date = $request->get('todate')?$request->get('todate'):'';
+    $code = $request->get('code')?$request->get('code'):'';
+    $orders = DB::table('orders')
+    ->leftJoin('users', 'users.id', '=', 'orders.user_id')
+    ->when($code == ""  && $from_date != "" && $to_date != "",function($query) use ($from_date,$to_date){
+        $query->whereBetween('orders.created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])->get();
+    })
+    ->when($code == "" && $from_date != "" && $to_date == "",function($query) use ($from_date,$to_date){
+        $query->where('orders.created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")->get();
+    })
+    ->when($code != "" && $from_date == "" && $to_date == "",function($query) use ($code,$from_date,$to_date){
+        $query->where('code',$code)->get();
+    })
+    ->when($code != "" && $from_date != "" && $to_date == "",function($query) use ($code,$from_date,$to_date){
+        $query->where('orders.created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")
+        ->where('code',$code)->get();
+    })
+    ->when($code != "" && $from_date != "" && $to_date != "",function($query) use ($code,$from_date,$to_date){
+        $query->whereBetween('orders.created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])
+        ->where('code',$code)->get();
+    })
+    ->where('is_active',1)
+    ->where('status',4)
+    ->orderBy('orders.id','ASC')
+    ->paginate(20);
+        return view('order.billing_orders_list', array('code'=>$code,'orders' => $orders,'from_date'=>$from_date,'to_date'=>$to_date));
+    }
+
     public function getDriverOrders(Request $request)
     {
         try{
@@ -263,9 +293,10 @@ class OrderController extends Controller
         try{
             $orders = Order::
             where('is_active',1)->where('status',4)
-            ->where(
-                'created_at', '>=', Carbon::now()->subMonth()->toDateTimeString()
-            )->orderBy('orders.id','ASC')->get(); 
+            // ->where(
+            //     'created_at', '>=', Carbon::now()->subMonth()->toDateTimeString()
+            // )
+            ->orderBy('orders.id','ASC')->get(); 
             return view('order.billing_orders_list',compact('orders'));
         }catch (Exception $ex) {
             return redirect('/');

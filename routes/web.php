@@ -39,7 +39,10 @@ Route::middleware(['web','auth'])->group(function () {
     Route::any('/production-print', [App\Http\Controllers\Admin\OrderController::class,'productionPrint'])->name('print');
     
     Route::get('/dispatch', [App\Http\Controllers\Admin\OrderController::class, 'getDispatchOrders'])->name('dispatchorders');
-    Route::any('/dispatch_search', [App\Http\Controllers\Admin\OrderController::class, 'dispatchSearch'])->name('dispatch_search');
+    Route::any('/dispatch_search', [App\Http\Controllers\Admin\OrderController::class, 'billingSearch'])->name('dispatch_search');
+
+    Route::any('/billing_search', [App\Http\Controllers\Admin\OrderController::class, 'billingSearch'])->name('billing_search');
+
 
     Route::get('/driver', [App\Http\Controllers\Admin\OrderController::class, 'getDriverOrders'])->name('driverorders');
     // Route::any('/driver-search', [App\Http\Controllers\Admin\OrderController::class, 'getDriverOrdersSearch'])->name('driver_order_search');
