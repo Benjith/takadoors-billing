@@ -9,16 +9,24 @@
             <form method="POST" action="{{ route('billing_search')}}">
                           @csrf
                     <div class="input-group">
-                      <div class="col-xs-6">
+                    <div class="container">
+                      <div class="dropdown dropdown-select">
                           <input type="date" id="fromDate" name="fromdate" value="<?php if(isset($from_date)) echo $from_date; ?>" class="form-control" placeholder="From Date" aria-label="search" aria-describedby="search">                      
                       </div>  
-                      <div class="col-xs-6">
+                      <div class="dropdown dropdown-select">
                           <input type="date" id="toDate" name="todate" value="<?php if(isset($to_date)) echo $to_date; ?>" class="form-control" placeholder="To Date" aria-label="search" aria-describedby="search">
                       </div> 
-                      <div class="col-xs-6">
-                           <input type="text" id="code" name="code" value="<?php if(isset($code)) echo $code; ?>" class="form-control" placeholder="Enter Code" aria-label="search" aria-describedby="search">                          
-                      </div>
-                      <div class="col-xs-6 agent-input">
+                        <div class="dropdown dropdown-select">
+                          <input type="text" id="fromSerial" name="fromserial" value="<?php if(isset($fromserial)) echo $fromserial; ?>" class="form-control" placeholder="From Serial Number" aria-label="search" aria-describedby="search">
+                        </div>
+                        <div class="dropdown dropdown-select">
+                          <input type="text" id="toSerial" name="toserial" value="<?php if(isset($toserial)) echo $toserial; ?>" class="form-control" placeholder="To Serial Number" aria-label="search" aria-describedby="search">                          
+                        </div>
+                        <span class="msg"></span>
+                        <div class="dropdown dropdown-select">
+                          <input type="text" id="code" name="code" value="<?php if(isset($code)) echo $code; ?>" class="form-control" placeholder="Enter Code" aria-label="search" aria-describedby="search">                          
+                        </div>
+                      <div class="col-xs-6 dropdown-select agent-input">
                           <button class="btn btn-primary mt-2 mt-xl-0">Submit</button>    
                       </div>
                     </div>                    

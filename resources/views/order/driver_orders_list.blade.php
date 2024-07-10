@@ -7,13 +7,31 @@
           <div class="row">
                         @csrf
                   <div class="input-group">
-                    <div class="col-xs-6">
+                    <div class="col-xs-6 dropdown dropdown-select">
                          <input type="text" id="driver_name" name="driver" value="<?php if(isset($driver)) echo $driver; ?>" class="form-control" placeholder="Enter Driver Name" aria-label="search" aria-describedby="search">                          
                     </div>
-                    <div class="col-xs-6">
-                         <input type="text" id="search-input" name="code" value="<?php if(isset($code)) echo $code; ?>" class="form-control" placeholder="Enter Code" aria-label="search" aria-describedby="search">                          
+                    <div class="col-xs-6 dropdown dropdown-select">
+                      <input type="date" id="fromDate" name="fromdate" value="<?php if(isset($from_date)) echo $from_date; ?>" class="form-control" placeholder="From Date" aria-label="search" aria-describedby="search">                      
                     </div>
-                    <div class="col-xs-6 agent-input">
+                    <div class="col-xs-6 dropdown dropdown-select">
+                      <input type="date" id="toDate" name="todate" value="<?php if(isset($to_date)) echo $to_date; ?>" class="form-control" placeholder="To Date" aria-label="search" aria-describedby="search">
+                    </div>
+</div>
+<div class="input-group">
+
+                    <div class="col-xs-6 dropdown dropdown-select">
+                      <input type="text" id="fromSerial" name="fromserial" value="<?php if(isset($fromserial)) echo $fromserial; ?>" class="form-control" placeholder="From Serial Number" aria-label="search" aria-describedby="search">
+                    </div>
+                    <div class="col-xs-6 dropdown dropdown-select">
+                      <input type="text" id="toSerial" name="toserial" value="<?php if(isset($toserial)) echo $toserial; ?>" class="form-control" placeholder="To Serial Number" aria-label="search" aria-describedby="search">                                                  
+                    </div>
+</div>
+<div class="input-group">
+
+                    <div class="col-xs-6 dropdown dropdown-select">
+                         <input type="text dropdown dropdown-select" id="search-input" name="code" value="<?php if(isset($code)) echo $code; ?>" class="form-control" placeholder="Enter Code" aria-label="search" aria-describedby="search">                          
+                    </div>
+                    <div class="col-xs-6 dropdown-select agent-input">
                         <button id="searchOrder" class="btn btn-primary mt-2 mt-xl-0">Submit</button>    
                     </div>
                     <div style="margin-left:350px;">                      
@@ -23,6 +41,7 @@
                     </div>
                   </div>  
 </div>
+<br>
           <div class="status_message"></div>
           @if(Session::has('error'))
           <div class="alert-danger flash-message" >  <span> {{ Session::get('error') }} </span>   </div>
@@ -128,6 +147,7 @@
         var requestData = {
             driver_name: driverName
         };
+        alert();
         $.ajax({
             url: "{{ route('printDriverOrder') }}",
             method: 'POST', // or 'GET', depending on your server-side implementation

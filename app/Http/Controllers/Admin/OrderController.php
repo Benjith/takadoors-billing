@@ -139,6 +139,8 @@ class OrderController extends Controller
     $from_date = $request->get('fromdate')?$request->get('fromdate'):'';
     $to_date = $request->get('todate')?$request->get('todate'):'';
     $code = $request->get('code')?$request->get('code'):'';
+    $fromserial = $request->get('fromserial')?$request->get('fromserial'):'';
+    $toserial = $request->get('toserial')?$request->get('toserial'):'';
     $orders = DB::table('orders')
     ->leftJoin('users', 'users.id', '=', 'orders.user_id')
     ->when($code == ""  && $from_date != "" && $to_date != "",function($query) use ($from_date,$to_date){
@@ -158,17 +160,25 @@ class OrderController extends Controller
         $query->whereBetween('orders.created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])
         ->where('code',$code)->get();
     })
+    ->when($fromserial != "" && $toserial != "",function($query) use ($fromserial,$toserial){
+        $query->whereBetween('serial_no',[intval($fromserial),intval($toserial)])->get();
+    })
+    ->when($fromserial != "" && $toserial == "",function($query) use ($fromserial,$toserial){
+        $query->where('serial_no','>=',intval($fromserial))->get();
+    })
     ->where('is_active',1)
     ->where('status',3)
     ->orderBy('orders.id','ASC')
     ->paginate(20);
-    return view('order.dispatch_list', array('code'=>$code,'orders' => $orders,'from_date'=>$from_date,'to_date'=>$to_date));
+    return view('order.dispatch_list', array('code'=>$code,'orders' => $orders,'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial));
 }
 
 public function billingSearch(Request $request) {
     $from_date = $request->get('fromdate')?$request->get('fromdate'):'';
     $to_date = $request->get('todate')?$request->get('todate'):'';
     $code = $request->get('code')?$request->get('code'):'';
+    $fromserial = $request->get('fromserial')?$request->get('fromserial'):'';
+    $toserial = $request->get('toserial')?$request->get('toserial'):'';
     $orders = DB::table('orders')
     ->leftJoin('users', 'users.id', '=', 'orders.user_id')
     ->when($code == ""  && $from_date != "" && $to_date != "",function($query) use ($from_date,$to_date){
@@ -188,11 +198,17 @@ public function billingSearch(Request $request) {
         $query->whereBetween('orders.created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])
         ->where('code',$code)->get();
     })
+    ->when($fromserial != "" && $toserial != "",function($query) use ($fromserial,$toserial){
+        $query->whereBetween('serial_no',[intval($fromserial),intval($toserial)])->get();
+    })
+    ->when($fromserial != "" && $toserial == "",function($query) use ($fromserial,$toserial){
+        $query->where('serial_no','>=',intval($fromserial))->get();
+    })
     ->where('is_active',1)
     ->where('status',4)
     ->orderBy('orders.id','ASC')
     ->paginate(20);
-        return view('order.billing_orders_list', array('code'=>$code,'orders' => $orders,'from_date'=>$from_date,'to_date'=>$to_date));
+        return view('order.billing_orders_list', array('code'=>$code,'orders' => $orders,'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial));
     }
 
     public function getDriverOrders(Request $request)
@@ -210,9 +226,36 @@ public function billingSearch(Request $request) {
 
     public function getDriverOrdersSearch(Request $request) {
         if ($request->ajax()) {
-            $code = $request->input('code')?$request->get('code'):'';
+            $from_date = $request->get('fromdate')?$request->get('fromdate'):'';
+            $to_date = $request->get('todate')?$request->get('todate'):'';
+            $code = $request->get('code')?$request->get('code'):'';
+            $fromserial = $request->get('fromserial')?$request->get('fromserial'):'';
+            $toserial = $request->get('toserial')?$request->get('toserial'):'';
             $mergedData = [];
-            if($code != ""){
+            $orders = DB::table('orders')
+            ->leftJoin('users', 'users.id', '=', 'orders.user_id')
+            ->when($code == ""  && $from_date != "" && $to_date != "",function($query) use ($from_date,$to_date){
+                $query->whereBetween('orders.created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])->get();
+            })
+            ->when($code == "" && $from_date != "" && $to_date == "",function($query) use ($from_date,$to_date){
+                $query->where('orders.created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")->get();
+            })
+            ->when($code != "" && $from_date == "" && $to_date == "",function($query) use ($code,$from_date,$to_date){
+                $query->where('code',$code)->get();
+            })
+            ->when($code != "" && $from_date != "" && $to_date == "",function($query) use ($code,$from_date,$to_date){
+                $query->where('orders.created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")
+                ->where('code',$code)->get();
+            })
+            ->when($code != "" && $from_date != "" && $to_date != "",function($query) use ($code,$from_date,$to_date){
+                $query->whereBetween('orders.created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])
+                ->where('code',$code)->get();
+            })
+            ->where('is_active',1)
+            ->where('status',3)
+            ->orderBy('orders.id','ASC')
+            ->get();
+            if ($orders->isNotEmpty()) {
                 $data = DB::table('orders')
                 ->where('code',$code)
                 ->where('is_active',1)
@@ -220,7 +263,7 @@ public function billingSearch(Request $request) {
                 ->orderBy('orders.id','ASC')
                 ->get();
                 $previousData = $request->session()->get('previousData', []);
-                $mergedData = array_merge($previousData, $data->toArray());
+                $mergedData = array_merge($previousData, $orders->toArray());
                 // Store the merged data in the session for future use
                 $request->session()->put('previousData', $mergedData);
             }
@@ -229,7 +272,7 @@ public function billingSearch(Request $request) {
             // return response()->json(['data' => $data]);
         }
        
-        return view('order.driver_orders_list', array('code'=>$code,'orders' => $orders));
+        return view('order.driver_orders_list', array('code'=>$code,'orders' => $orders,'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial));
     }
 
      public function driverPrint(Request $request) {
@@ -246,10 +289,10 @@ public function billingSearch(Request $request) {
 
 
                 $sumByCode = [];
-
+                $quantity = 0;
                 foreach ($previousData as $order) {
                     $code = $order->code; 
-                    $quantity = $order->quantity;
+                    if(is_numeric($order->quantity)){ $quantity = $order->quantity; }
 
                     if (array_key_exists($code, $sumByCode)) {
                         $sumByCode[$code] += $quantity;

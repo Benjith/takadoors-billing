@@ -64,7 +64,7 @@
                             <td><?= $row['serial_no'] ?></td>
                                 <td><textarea class="form-control" name="thickness[]" rows="1" cols="20" data-row="<?= $row['id'] ?>" data-column="1"><?= $row['thickness'] ?></textarea></td>
                                     <td><textarea class="form-control" name="length[]" rows="1"cols="20" data-row="<?= $row['id'] ?>" data-column="2"><?= $row['length'] ?></textarea></td>
-                                          <td><textarea class="form-control" name="width[]" rows="1"cols="20" data-row="<?= $row['id'] ?>" data-column="3"><?= $row['width'] ?></textarea></td>
+                                          <td><textarea class="form-control" name="width[]" rows="1"cols="40" data-row="<?= $row['id'] ?>" data-column="3"><?= $row['width'] ?></textarea></td>
                                           <td><textarea class="form-control" name="quantity[]" rows="1"cols="20" data-row="<?= $row['id'] ?>" data-column="4"><?= $row['quantity'] ?></textarea></td>
                                            <td><textarea class="form-control" name="design[]" rows="1" cols="30" data-row="<?= $row['id'] ?>" data-column="5"><?= $row['design'] ?></textarea></td>
                                            <td><textarea class="form-control" name="frame[]" rows="1" cols="30" data-row="<?= $row['id'] ?>" data-column="6"><?= $row['frame'] ?></textarea></td>

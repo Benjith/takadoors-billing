@@ -17,7 +17,7 @@
                             <th>Remarks</th>
         </tr> <?php $quantity = 0; ?> 
         @foreach ($orders as $key => $order)
-        <?php $quantity = $quantity+$order->quantity;?>
+        <?php if (is_numeric($order->quantity)) { $quantity = (int)$quantity+ (int)$order->quantity; }?>
         <tr>  
         <td>{{$order->serial_no}}</td>
         <td>{{$order->thickness}}</td>
