@@ -84,13 +84,29 @@
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
 @endsection
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready(function() {
+function initializeDataTable() {
     $('#dispatch_table').DataTable({
         paging: false, // Disable DataTables pagination
         ordering: true, // Enable column ordering
         info: false, // Disable the info text
+        destroy: true, // Allow reinitialization
+    });
+}
+
+$(document).ready(function() {
+    initializeDataTable();
+    
+    // Reinitialize DataTable after each pagination click
+    $(document).on('click', '.pagination a', function(event) {
+        event.preventDefault();
+        var url = $(this).attr('href');
+        $.get(url, function(data) {
+            $('.content-wrapper').html($(data).find('.content-wrapper').html());
+            initializeDataTable();
+        });
     });
 });
 </script>
