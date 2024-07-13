@@ -45,7 +45,7 @@
                 <div class="card-body">
                   <p class="card-title">BILLING REPORT</p>
                   <div class="table-responsive">
-                    <table id="dispatch_table" class="table">
+                    <table id="billing_table" class="table">
                       <thead>
                         <tr>
                             <th>SI.No.</th>
@@ -88,9 +88,10 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
-    $('#dispatch_table').DataTable({
-        "order": [], // Disable automatic sorting
-        paging: false,
+    $('#billing_table').DataTable({
+        paging: false, // Disable DataTables pagination
+        ordering: true, // Enable column ordering
+        info: false, // Disable the info text
     });
     
 });
