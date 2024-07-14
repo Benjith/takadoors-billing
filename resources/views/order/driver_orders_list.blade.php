@@ -101,6 +101,7 @@
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.2/js/buttons.html5.min.js"></script>
 
 <script>
+  
   $(document).ready(function() {
     var table = $('#driver_table').DataTable({
           processing: true,
