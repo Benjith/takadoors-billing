@@ -110,7 +110,11 @@
               url: "{{ route('getData') }}",
               type: "GET",
               data: function(d) {
-                d.code = $('#search-input').val(); // Get the code from the search input
+                d.code = $('#search-input').val(); 
+                d.fromdate = $('#fromDate').val(); 
+                d.todate = $('#toDate').val(); 
+                d.fromserial= $('#fromSerial').val(); 
+                d.toserial = $('#toSerial').val(); 
               }
           },
           columns: [
@@ -124,16 +128,20 @@
             { data: 'code', name: 'code' },
             { data: 'remarks', name: 'remarks' }
         ],
-          paging: true, // Enable pagination
-          pageLength: 1000, // Set the number of rows per page to 1000
-          lengthMenu: [ [10, 25, 50, 100, 500, -1], [10, 25, 50, 100, 500, "All"] ], // Customize the length menu
-          // Add other pagination options as needed
+          paging: true, 
+          pageLength: 1000, 
+          lengthMenu: [ [10, 25, 50, 100, 500, -1], [10, 25, 50, 100, 500, "All"] ], 
+          initComplete: function(settings, json) {
+              table.clear().draw(); // Ensure the table is empty on load
+          }
       });
 
       $('#searchOrder').on('click', function() {
+        alert('a');
         table.clear().draw();
-        // table.ajax.reload(); // Reload the DataTable with new search criteria        
+        // table.ajax.reload();        
     });
+
     $('#customPrintButton').on('click', function() {
         if ($('#driver_table tbody tr').length === 0) {
             alert('The table does not have any data');
@@ -147,23 +155,18 @@
         var requestData = {
             driver_name: driverName
         };
-        alert();
+
         $.ajax({
             url: "{{ route('printDriverOrder') }}",
-            method: 'POST', // or 'GET', depending on your server-side implementation
+            method: 'POST', 
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Include CSRF token in headers
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 
             },
             data: requestData,
             success:function(response){
               console.log(response);
               if (response.pdf1) {
                 window.open('/reports/' + response.pdf1, '_blank');
-                // var blob = new Blob([response.pdf1]);
-                // var link = document.createElement('a');
-                // link.href = window.URL.createObjectURL(blob);
-                // link.download = "dispatch_order.pdf";
-                // link.click(); 
               } 
               if (response.pdf2) {
                 window.open('/reports/' + response.pdf2, '_blank');
@@ -178,10 +181,3 @@
 
   });
 </script> 
-<!-- <script>
-$(document).ready(function() {
-    $('#driver_table').DataTable({
-        "order": [] // Disable automatic sorting
-    });
-});
-</script> -->

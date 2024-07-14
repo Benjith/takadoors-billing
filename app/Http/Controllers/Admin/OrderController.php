@@ -273,12 +273,12 @@ public function billingSearch(Request $request) {
     }
 
     public function getDriverOrdersSearch(Request $request) {
-        if ($request->ajax()) {
             $from_date = $request->get('fromdate')?$request->get('fromdate'):'';
             $to_date = $request->get('todate')?$request->get('todate'):'';
             $code = $request->get('code')?$request->get('code'):'';
             $fromserial = $request->get('fromserial')?$request->get('fromserial'):'';
             $toserial = $request->get('toserial')?$request->get('toserial'):'';
+        if ($request->ajax()) {        
             $mergedData = [];
             $orders = DB::table('orders')
             ->leftJoin('users', 'users.id', '=', 'orders.user_id')
@@ -299,17 +299,26 @@ public function billingSearch(Request $request) {
                 $query->whereBetween('orders.created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])
                 ->where('code',$code)->get();
             })
+            ->when($fromserial != "" && $toserial != "",function($query) use ($fromserial,$toserial){
+                $query->whereBetween('serial_no',[intval($fromserial),intval($toserial)])->get();
+            })
+            ->when($fromserial != "" && $toserial == "",function($query) use ($fromserial,$toserial){
+                $query->where('serial_no','>=',intval($fromserial))->get();
+            })
             ->where('is_active',1)
             ->where('status',3)
             ->orderBy('orders.id','ASC')
             ->get();
+            if($code == ""  && $from_date == "" && $to_date == "" && $fromserial == "" && $toserial == ""){
+                $orders = collect();
+            }
             if ($orders->isNotEmpty()) {
-                $data = DB::table('orders')
-                ->where('code',$code)
-                ->where('is_active',1)
-                ->where('status',3)
-                ->orderBy('orders.id','ASC')
-                ->get();
+                // $data = DB::table('orders')
+                // ->where('code',$code)
+                // ->where('is_active',1)
+                // ->where('status',3)
+                // ->orderBy('orders.id','ASC')
+                // ->get();
                 $previousData = $request->session()->get('previousData', []);
                 $mergedData = array_merge($previousData, $orders->toArray());
                 // Store the merged data in the session for future use
@@ -319,8 +328,8 @@ public function billingSearch(Request $request) {
             return DataTables::of($mergedData)->toJson();
             // return response()->json(['data' => $data]);
         }
-       
-        return view('order.driver_orders_list', array('code'=>$code,'orders' => $orders,'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial));
+        $request->session()->forget('previousData');
+        return view('order.driver_orders_list', array('code'=>$code,'orders' => [],'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial));
     }
 
      public function driverPrint(Request $request) {
