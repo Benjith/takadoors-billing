@@ -135,7 +135,7 @@ class OrderController extends Controller
        }
    }
 
-   public function dispatchSearch(Request $request) {
+   public function dispatchSearch1(Request $request) {
     $from_date = $request->get('fromdate')?$request->get('fromdate'):'';
     $to_date = $request->get('todate')?$request->get('todate'):'';
     $code = $request->get('code')?$request->get('code'):'';
@@ -172,6 +172,54 @@ class OrderController extends Controller
     ->paginate(20);
     return view('order.dispatch_list', array('code'=>$code,'orders' => $orders,'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial));
 }
+
+public function dispatchSearch(Request $request) {
+    $from_date = $request->get('fromdate') ?: '';
+    $to_date = $request->get('todate') ?: '';
+    $code = $request->get('code') ?: '';
+    $fromserial = $request->get('fromserial') ?: '';
+    $toserial = $request->get('toserial') ?: '';
+    
+    $query = DB::table('orders')
+        ->leftJoin('users', 'users.id', '=', 'orders.user_id')
+        ->where('is_active', 1)
+        ->where('status', 3)
+        ->orderBy('orders.id', 'ASC');
+
+    if ($from_date && $to_date) {
+        $query->whereBetween('orders.created_at', [date('Y-m-d', strtotime($from_date)) . " 00:00:00", date('Y-m-d', strtotime($to_date)) . " 23:59:59"]);
+    } elseif ($from_date) {
+        $query->where('orders.created_at', '>', date('Y-m-d', strtotime($from_date)) . " 00:00:00");
+    }
+    
+    if ($code) {
+        $query->where('code', $code);
+    }
+    
+    if ($fromserial && $toserial) {
+        $query->whereBetween('serial_no', [intval($fromserial), intval($toserial)]);
+    } elseif ($fromserial) {
+        $query->where('serial_no', '>=', intval($fromserial));
+    }
+    
+    $orders = $query->paginate(20)->appends([
+        'fromdate' => $from_date,
+        'todate' => $to_date,
+        'code' => $code,
+        'fromserial' => $fromserial,
+        'toserial' => $toserial
+    ]);
+
+    return view('order.dispatch_list', [
+        'code' => $code,
+        'orders' => $orders,
+        'from_date' => $from_date,
+        'to_date' => $to_date,
+        'fromserial' => $fromserial,
+        'toserial' => $toserial
+    ]);
+}
+
 
 public function billingSearch(Request $request) {
     $from_date = $request->get('fromdate')?$request->get('fromdate'):'';

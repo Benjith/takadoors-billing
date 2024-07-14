@@ -103,7 +103,14 @@ $(document).ready(function() {
     $(document).on('click', '.pagination a', function(event) {
         event.preventDefault();
         var url = $(this).attr('href');
-        $.get(url, function(data) {
+        var params = {
+            fromdate: $('#fromDate').val(),
+            todate: $('#toDate').val(),
+            fromserial: $('#fromSerial').val(),
+            toserial: $('#toSerial').val(),
+            code: $('#code').val()
+        };
+        $.get(url, params, function(data) {
             $('.content-wrapper').html($(data).find('.content-wrapper').html());
             initializeDataTable();
         });
