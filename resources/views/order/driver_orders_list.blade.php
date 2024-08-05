@@ -16,6 +16,9 @@
                     <div class="col-xs-6 dropdown dropdown-select">
                       <input type="date" id="toDate" name="todate" value="<?php if(isset($to_date)) echo $to_date; ?>" class="form-control" placeholder="To Date" aria-label="search" aria-describedby="search">
                     </div>
+                    <div class="col-xs-6 dropdown-select agent-input">
+                    <button id="undoButton" class="btn btn-warning mt-2 mt-xl-0">Undo</button>
+</div>
 </div>
 <div class="input-group">
 
@@ -25,7 +28,8 @@
                     <div class="col-xs-6 dropdown dropdown-select">
                       <input type="text" id="toSerial" name="toserial" value="<?php if(isset($toserial)) echo $toserial; ?>" class="form-control" placeholder="To Serial Number" aria-label="search" aria-describedby="search">                                                  
                     </div>
-</div>
+                    
+                  </div>
 <div class="input-group">
 
                     <div class="col-xs-6 dropdown dropdown-select">
@@ -34,11 +38,13 @@
                     <div class="col-xs-6 dropdown-select agent-input">
                         <button id="searchOrder" class="btn btn-primary mt-2 mt-xl-0">Submit</button>    
                     </div>
-                    <div style="margin-left:350px;">                      
+                   
+                    <div style="margin-left:350px;">
                           <div id="print">
                             <button id="customPrintButton" class="btn btn-primary mt-2 mt-xl-0">Print</button>
                           </div> 
                     </div>
+                   
                   </div>  
 </div>
 <br>
@@ -116,6 +122,7 @@
                 d.todate = $('#toDate').val(); 
                 d.fromserial= $('#fromSerial').val(); 
                 d.toserial = $('#toSerial').val(); 
+                d.undoflag = $('#undoFlag').val(); 
               }
           },
           columns: [
@@ -138,9 +145,27 @@
       });
 
       $('#searchOrder').on('click', function() {
-        alert('a');
         table.clear().draw();
         // table.ajax.reload();        
+    });
+    $('#undoButton').on('click', function() {
+      $.ajax({
+          url: '{{ route("undoLastAddedRows") }}', // Replace with your route
+          type: 'POST',
+          headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 
+          },
+          success: function(response) {
+              if (response.success) {
+                console.log("Success");
+                  // Reload the data table or take any other appropriate action
+                  table.clear().draw();
+              } else {
+                alert('Undo action failed! ' + response.message);
+                  // alert('Undo action failed!');
+              }
+          }
+      });
     });
 
     $('#customPrintButton').on('click', function() {

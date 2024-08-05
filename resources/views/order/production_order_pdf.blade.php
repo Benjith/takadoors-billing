@@ -1,7 +1,6 @@
  
-<div class="container">  
-<h3 style="text-align: center;" class="heading-section">PRODUCTION ORDER LIST</h3>
-    <br/> 
+  
+<h3 style="text-align: center;">PRODUCTION ORDER LIST</h3>
     @php
     use Carbon\Carbon;
     @endphp
@@ -36,9 +35,7 @@
         </tr> 
         @endforeach 
     </table>
-   <p><b>Total Quantity : </b><?php if(isset($quantity)) echo $quantity; ?></p>
-
-</div>  
+   <p><b>Total Quantity : </b><?php if(isset($quantity)) echo $quantity; ?></p> 
 <style type="text/css">  
     table, td,tr,th{  
         border:1px solid black; 

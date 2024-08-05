@@ -278,59 +278,121 @@ public function billingSearch(Request $request) {
             $code = $request->get('code')?$request->get('code'):'';
             $fromserial = $request->get('fromserial')?$request->get('fromserial'):'';
             $toserial = $request->get('toserial')?$request->get('toserial'):'';
-        if ($request->ajax()) {        
-            $mergedData = [];
-            $orders = DB::table('orders')
-            ->leftJoin('users', 'users.id', '=', 'orders.user_id')
-            ->when($code == ""  && $from_date != "" && $to_date != "",function($query) use ($from_date,$to_date){
-                $query->whereBetween('orders.created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])->get();
-            })
-            ->when($code == "" && $from_date != "" && $to_date == "",function($query) use ($from_date,$to_date){
-                $query->where('orders.created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")->get();
-            })
-            ->when($code != "" && $from_date == "" && $to_date == "",function($query) use ($code,$from_date,$to_date){
-                $query->where('code',$code)->get();
-            })
-            ->when($code != "" && $from_date != "" && $to_date == "",function($query) use ($code,$from_date,$to_date){
-                $query->where('orders.created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")
-                ->where('code',$code)->get();
-            })
-            ->when($code != "" && $from_date != "" && $to_date != "",function($query) use ($code,$from_date,$to_date){
-                $query->whereBetween('orders.created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])
-                ->where('code',$code)->get();
-            })
-            ->when($fromserial != "" && $toserial != "",function($query) use ($fromserial,$toserial){
-                $query->whereBetween('serial_no',[intval($fromserial),intval($toserial)])->get();
-            })
-            ->when($fromserial != "" && $toserial == "",function($query) use ($fromserial,$toserial){
-                $query->where('serial_no','>=',intval($fromserial))->get();
-            })
-            ->where('is_active',1)
-            ->where('status',3)
-            ->orderBy('orders.id','ASC')
-            ->get();
-            if($code == ""  && $from_date == "" && $to_date == "" && $fromserial == "" && $toserial == ""){
-                $orders = collect();
-            }
-            if ($orders->isNotEmpty()) {
-                // $data = DB::table('orders')
-                // ->where('code',$code)
-                // ->where('is_active',1)
-                // ->where('status',3)
-                // ->orderBy('orders.id','ASC')
-                // ->get();
-                $previousData = $request->session()->get('previousData', []);
-                $mergedData = array_merge($previousData, $orders->toArray());
-                // Store the merged data in the session for future use
-                $request->session()->put('previousData', $mergedData);
-            }
+            // $undoflag = $request->get('undoflag')?$request->get('undoflag'):'0';
             
+        if ($request->ajax()) { 
+            $undoflag = $request->session()->get('undoFlag');
+            if($undoflag == '0'){
+                $mergedData = [];
+                $orders = DB::table('orders')
+                ->leftJoin('users', 'users.id', '=', 'orders.user_id')
+                ->when($code == ""  && $from_date != "" && $to_date != "",function($query) use ($from_date,$to_date){
+                    $query->whereBetween('orders.created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])->get();
+                })
+                ->when($code == "" && $from_date != "" && $to_date == "",function($query) use ($from_date,$to_date){
+                    $query->where('orders.created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")->get();
+                })
+                ->when($code != "" && $from_date == "" && $to_date == "",function($query) use ($code,$from_date,$to_date){
+                    $query->where('code',$code)->get();
+                })
+                ->when($code != "" && $from_date != "" && $to_date == "",function($query) use ($code,$from_date,$to_date){
+                    $query->where('orders.created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")
+                    ->where('code',$code)->get();
+                })
+                ->when($code != "" && $from_date != "" && $to_date != "",function($query) use ($code,$from_date,$to_date){
+                    $query->whereBetween('orders.created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])
+                    ->where('code',$code)->get();
+                })
+                ->when($fromserial != "" && $toserial != "",function($query) use ($fromserial,$toserial){
+                    $query->whereBetween('serial_no',[intval($fromserial),intval($toserial)])->get();
+                })
+                ->when($fromserial != "" && $toserial == "",function($query) use ($fromserial,$toserial){
+                    $query->where('serial_no','>=',intval($fromserial))->get();
+                })
+                ->where('is_active',1)
+                ->where('status',3)
+                ->orderBy('orders.id','ASC')
+                ->get();
+                if($code == ""  && $from_date == "" && $to_date == "" && $fromserial == "" && $toserial == ""){
+                    $orders = collect();
+                }
+                if ($orders->isNotEmpty()) {
+                    // $data = DB::table('orders')
+                    // ->where('code',$code)
+                    // ->where('is_active',1)
+                    // ->where('status',3)
+                    // ->orderBy('orders.id','ASC')
+                    // ->get();
+                    $sequenceNo = $this->generateSequenceNumber($request);
+
+                    // Append the sequence number to each order
+                    foreach ($orders as $order) {
+                        $order->sequence_no = $sequenceNo;
+                    }
+                    $previousData = $request->session()->get('previousData', []);
+                    $mergedData = array_merge($previousData, $orders->toArray());
+                    // Store the merged data in the session for future use
+                    $request->session()->put('previousData', $mergedData);
+                }
+            }else{
+                $mergedData = $request->session()->get('previousData', []);
+                $request->session()->put('undoFlag','0');
+            }
             return DataTables::of($mergedData)->toJson();
             // return response()->json(['data' => $data]);
         }
         $request->session()->forget('previousData');
+        $request->session()->forget('undoFlag');
         return view('order.driver_orders_list', array('code'=>$code,'orders' => [],'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial));
     }
+
+        private function generateSequenceNumber(Request $request) {
+            // Retrieve the current sequence number from the session
+            $sequenceNo = $request->session()->get('sequenceNo', 0);
+        
+            // Increment the sequence number
+            $sequenceNo++;
+        
+            // Store the updated sequence number back in the session
+            $request->session()->put('sequenceNo', $sequenceNo);
+        
+            return $sequenceNo;
+        }
+
+        public function undoDriverList(Request $request) {
+            if ($request->ajax()) {
+                // Retrieve the previous data from the session
+                $previousData = $request->session()->get('previousData', []);
+                // Check if there is any data
+                if (!empty($previousData)) {
+                    // print_r($previousData);
+
+                    // Find the last sequence number in the previous data
+                    $lastSequenceNo = end($previousData)->sequence_no;
+                    // print_r($lastSequenceNo);
+        
+                    // Filter out rows with the last sequence number
+                    $filteredData = array_filter($previousData, function ($order) use ($lastSequenceNo) {
+                        return $order->sequence_no != $lastSequenceNo;
+                    });
+                    // print_r($filteredData);
+        
+                    // Update the session with the filtered data
+                    $request->session()->put('previousData', array_values($filteredData));
+
+                    $request->session()->put('undoFlag','1');
+
+                    $previousData = $request->session()->get('previousData', []);
+                    // print_r($filteredData);
+                    // return DataTables::of($previousData)->toJson();
+
+                }
+                return response()->json(['success' => true]);
+            }
+        
+            return response()->json(['success' => false]);
+        }
+        
 
      public function driverPrint(Request $request) {
         try{ 

@@ -100,7 +100,15 @@ $(document).ready(function(){
         if(lastRowFrameValue == undefined){
           lastRowFrameValue = '';
         }
-        var newRow = '<tr><td class="serial-number">1</td><td><textarea class="form-control" name="thickness" rows="1" data-row="'+datarow+'" data-column="1"></textarea></td><td><textarea class="form-control" name="length" rows="1" data-row="'+datarow+'" data-column="2"></textarea></td><td><textarea name="width" class="form-control"  rows="1"data-row="'+datarow+'" data-column="3"></textarea></td><td><textarea class="form-control" name="quantity" rows="1" data-row="'+datarow+'" data-column="4"></textarea></td><td><textarea class="form-control" name="design" rows="1" data-row="'+datarow+'" data-column="5">'+lastRowDesignValue+'</textarea></td><td><textarea class="form-control" name="frame" rows="1" data-row="'+datarow+'" data-column="6">'+lastRowFrameValue+'</textarea></td><td><textarea class="form-control" name="code" rows="1" data-row="'+datarow+'" data-column="7">'+lastRowCodeValue+'</textarea></td><td><textarea class="form-control" name="remarks" rows="1" data-row="'+datarow+'" data-column="8"></textarea></td><td><a href="#" class="deleteRow"><i class="mdi mdi-delete"></i></a></td></tr>';
+        var lastRowThicknessValue = $("#orderTable tbody tr:last textarea[name='thickness']").val();
+        if(lastRowThicknessValue == undefined){
+          lastRowThicknessValue = '';
+        }
+        var lastRowRemarkValue = $("#orderTable tbody tr:last textarea[name='remarks']").val();
+        if(lastRowRemarkValue == undefined){
+          lastRowThicknessValue = '';
+        }
+        var newRow = '<tr><td class="serial-number">1</td><td><textarea class="form-control" name="thickness" rows="1" data-row="'+datarow+'" data-column="1">'+lastRowThicknessValue+'</textarea></td><td><textarea class="form-control" name="length" rows="1" data-row="'+datarow+'" data-column="2"></textarea></td><td><textarea name="width" class="form-control"  rows="1"data-row="'+datarow+'" data-column="3"></textarea></td><td><textarea class="form-control" name="quantity" rows="1" data-row="'+datarow+'" data-column="4"></textarea></td><td><textarea class="form-control" name="design" rows="1" data-row="'+datarow+'" data-column="5">'+lastRowDesignValue+'</textarea></td><td><textarea class="form-control" name="frame" rows="1" data-row="'+datarow+'" data-column="6">'+lastRowFrameValue+'</textarea></td><td><textarea class="form-control" name="code" rows="1" data-row="'+datarow+'" data-column="7">'+lastRowCodeValue+'</textarea></td><td><textarea class="form-control" name="remarks" rows="1" data-row="'+datarow+'" data-column="8">'+lastRowRemarkValue+'</textarea></td><td><a href="#" class="deleteRow"><i class="mdi mdi-delete"></i></a></td></tr>';
         $("#orderTable tbody").append(newRow);
         datarow++;
         reorderSerialNumbers();

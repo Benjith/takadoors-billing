@@ -51,6 +51,7 @@ Route::middleware(['web','auth'])->group(function () {
     Route::any('/driver-print', [App\Http\Controllers\Admin\OrderController::class,'driverPrint'])->name('printDriverOrder');
 
     Route::get('/billing', [App\Http\Controllers\Admin\OrderController::class, 'getBilling'])->name('billing');
+    Route::post('/undo', [App\Http\Controllers\Admin\OrderController::class, 'undoDriverList'])->name('undoLastAddedRows');
 
 
 });
