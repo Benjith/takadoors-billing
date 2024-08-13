@@ -38,12 +38,12 @@
                     <div class="col-xs-6 dropdown-select agent-input">
                         <button id="searchOrder" class="btn btn-primary mt-2 mt-xl-0">Submit</button>    
                     </div>
-                   
-                    <div style="margin-left:350px;">
-                          <div id="print">
-                            <button id="customPrintButton" class="btn btn-primary mt-2 mt-xl-0">Print</button>
-                          </div> 
+                    <div class="col-xs-6 dropdown-select agent-input">
+                        <button id="addRowButton" class="btn btn-secondary mt-2 mt-xl-0">Add Row</button>
                     </div>
+                    <div class="col-xs-6 dropdown-select agent-input" id="print">
+                            <button id="customPrintButton" class="btn btn-primary mt-2 mt-xl-0">Print</button>
+                    </div> 
                    
                   </div>  
 </div>
@@ -86,6 +86,34 @@
             </div>
           </div>
         </div>
+        <!-- Modal -->
+<div class="modal fade" id="addRowModal" tabindex="-1" role="dialog" aria-labelledby="addRowModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addRowModalLabel">Add New Row</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="addRowForm">
+          @csrf
+          <div class="form-group">
+            <label for="newCode">Enter Code</label>
+            <input type="text" class="form-control" id="newCode" name="newCode" placeholder="Enter Code">
+          </div>
+          <!-- Add more input fields here if needed -->
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" id="submitRowButton" class="btn btn-primary">Add Row</button>
+      </div>
+    </div>
+  </div>
+</div>
+
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
 @endsection
@@ -204,6 +232,37 @@
             },
         });
     });
+    $('#addRowButton').on('click', function() {
+        $('#addRowModal').modal('show');
+    });
 
+    $('#submitRowButton').on('click', function() {
+        var newCode = $('#newCode').val();
+        
+        if (newCode.trim() === '') {
+            alert('Please enter a code');
+            return;
+        }
+
+        $.ajax({
+            url: '{{ route("addRowToSession") }}',
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: { newCode: newCode },
+            success: function(response) {
+                if (response.success) {
+                    $('#addRowModal').modal('hide');
+                    table.clear().draw();
+                    // table.ajax.reload(); 
+                    // Optionally, reload the data table
+                    // $('#driver_table').DataTable().ajax.reload();
+                } else {
+                    alert('Failed to add row!');
+                }
+            }
+        });
+    });
   });
 </script> 

@@ -181,6 +181,7 @@ public function dispatchSearch(Request $request) {
     $toserial = $request->get('toserial') ?: '';
     
     $query = DB::table('orders')
+        ->select('orders.*', 'users.fullname')
         ->leftJoin('users', 'users.id', '=', 'orders.user_id')
         ->where('is_active', 1)
         ->where('status', 3)
@@ -209,7 +210,6 @@ public function dispatchSearch(Request $request) {
         'fromserial' => $fromserial,
         'toserial' => $toserial
     ]);
-
     return view('order.dispatch_list', [
         'code' => $code,
         'orders' => $orders,
@@ -315,8 +315,15 @@ public function billingSearch(Request $request) {
                 ->get();
                 if($code == ""  && $from_date == "" && $to_date == "" && $fromserial == "" && $toserial == ""){
                     $orders = collect();
+                    $customRows = session()->get('custom_rows', []);
+
+                    $previousData = $request->session()->get('previousData', []);
+                    $mergedData = array_merge($previousData, $customRows);
+                    $request->session()->put('previousData', $mergedData);
+                    $request->session()->forget('custom_rows');
                 }
                 if ($orders->isNotEmpty()) {
+                // else{
                     // $data = DB::table('orders')
                     // ->where('code',$code)
                     // ->where('is_active',1)
@@ -329,20 +336,35 @@ public function billingSearch(Request $request) {
                     foreach ($orders as $order) {
                         $order->sequence_no = $sequenceNo;
                     }
+                    $customRows = session()->get('custom_rows', []);
                     $previousData = $request->session()->get('previousData', []);
                     $mergedData = array_merge($previousData, $orders->toArray());
+                    $mergedData = array_merge($mergedData, $customRows);
                     // Store the merged data in the session for future use
                     $request->session()->put('previousData', $mergedData);
+                    $request->session()->forget('custom_rows');
+                }else{
+                    $orders = collect();
+                    $customRows = session()->get('custom_rows', []);
+
+                    $previousData = $request->session()->get('previousData', []);
+                    $mergedData = array_merge($previousData, $customRows);
+                    $request->session()->put('previousData', $mergedData);
+                    $request->session()->forget('custom_rows');
                 }
             }else{
                 $mergedData = $request->session()->get('previousData', []);
                 $request->session()->put('undoFlag','0');
+            }
+            if (!$mergedData) {
+                $mergedData = [];
             }
             return DataTables::of($mergedData)->toJson();
             // return response()->json(['data' => $data]);
         }
         $request->session()->forget('previousData');
         $request->session()->forget('undoFlag');
+        $request->session()->forget('custom_rows');
         return view('order.driver_orders_list', array('code'=>$code,'orders' => [],'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial));
     }
 
@@ -394,7 +416,7 @@ public function billingSearch(Request $request) {
         }
         
 
-     public function driverPrint(Request $request) {
+     public function driverPrint1(Request $request) {
         try{ 
             $previousData = $request->session()->get('previousData', []);
             if(is_countable($previousData) && count($previousData)){
@@ -449,6 +471,61 @@ public function billingSearch(Request $request) {
             return redirect(url('/'));
         }
     }
+    public function driverPrint(Request $request) {
+        try {
+            // Retrieve previous data from the session
+            $previousData = $request->session()->get('previousData', []);
+            $previousData = $this->convertArrayToObject($previousData);
+            if (is_countable($previousData) && count($previousData)) {
+                $driverName = $request->input('driver_name');
+                // Data for dispatch report
+                $data = ['orders' => $previousData, 'driverName' => $driverName];
+    
+                ini_set('memory_limit', '512M');
+                $pdf = PDF::loadView('order/driver_order_pdf', $data);
+                $dispatch_report = 'dispatch_' . rand(10, 100) . '.pdf';
+                $pdf->save(public_path('/reports/' . $dispatch_report));
+    
+                // Summing quantities by code
+                $sumByCode = [];
+                foreach ($previousData as $order) {
+                    $code = $order->code; 
+                    if (is_numeric($order->quantity)) {
+                        if (array_key_exists($code, $sumByCode)) {
+                            $sumByCode[$code] += $order->quantity;
+                        } else {
+                            $sumByCode[$code] = $order->quantity;
+                        }
+                    }
+                }
+    
+                // Data for gatepass report
+                $data = ['orders' => $sumByCode, 'driverName' => $driverName];
+                $pdf2 = PDF::loadView('order/gatepass_order_pdf', $data);
+                $gatepass_report = 'gatepass_' . rand(10, 100) . '.pdf';
+                $pdf2->save(public_path('/reports/' . $gatepass_report));
+    
+                // Update the status of orders in the database
+                foreach ($previousData as $order) {
+                    Order::where('code', $order->code)->update(['status' => 4]);
+                }
+    
+                // Return JSON response with the PDF filenames
+                return response()->json([
+                    'pdf1' => $dispatch_report,
+                    'pdf2' => $gatepass_report
+                ]);
+    
+            } else {
+                return response()->json(['msg' => 'success', 'response' => 'No Data']);
+            }
+        } catch (Exception $e) {
+            // Log the exception and return an error response
+            \Log::error('Driver Print Error: ' . $e->getMessage());
+            return response()->json(['msg' => 'error', 'response' => 'An error occurred while generating the reports.']);
+        }
+    }
+    
 
     public function getBilling(Request $request)
     {
@@ -464,5 +541,43 @@ public function billingSearch(Request $request) {
             return redirect('/');
         }
     }
+
+    public function addRowDriver(Request $request) {
+        $newCode = $request->get('newCode');
+        
+        if ($newCode) {
+            $sequenceNo = $this->generateSequenceNumber($request);
+            $rows = session()->get('custom_rows', []);
+            $rows[] = (object)[
+                'serial_no' => $newCode, // Example serial number
+                'thickness' => '', // Add default or user input values here
+                'length' => '',
+                'width' => '',
+                'quantity' => '',
+                'design' => '',
+                'frame' => '',
+                'code' => '',
+                'remarks' => '',
+                'sequence_no'=>$sequenceNo,
+            ];
+            session()->put('custom_rows', $rows);
+            $rows = session()->get('custom_rows', []);
+            return response()->json(['success' => true]);
+        }
+    
+        return response()->json(['success' => false, 'message' => 'Invalid input']);
+    }
+
+    function convertArrayToObject($array)
+    {
+        foreach ($array as &$item) {
+            if (is_array($item)) {
+                // Convert associative array to object
+                $item = (object)$item;
+            }
+        }
+        return $array;
+    }
+    
 
 }

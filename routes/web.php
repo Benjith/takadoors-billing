@@ -53,6 +53,11 @@ Route::middleware(['web','auth'])->group(function () {
     Route::get('/billing', [App\Http\Controllers\Admin\OrderController::class, 'getBilling'])->name('billing');
     Route::post('/undo', [App\Http\Controllers\Admin\OrderController::class, 'undoDriverList'])->name('undoLastAddedRows');
 
+    Route::post('/dispatch/update', [App\Http\Controllers\Admin\DispatchController::class, 'update'])->name('dispatch.update');
+    Route::post('/driver/add', [App\Http\Controllers\Admin\OrderController::class, 'addRowDriver'])->name('addRowToSession');
+
+    
+    Route::get('/print/{from_date}/{to_date}/{fromserial}/{toserial}/{code}', [App\Http\Controllers\Admin\DispatchController::class, 'print'])->name('dispatch.print');
 
 });
 
