@@ -92,9 +92,9 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="addRowModalLabel">Add New Row</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <!-- <button id="closeModal" type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
-        </button>
+        </button> -->
       </div>
       <div class="modal-body">
         <form id="addRowForm">
@@ -107,7 +107,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button id="closeModal"type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" id="submitRowButton" class="btn btn-primary">Add Row</button>
       </div>
     </div>
@@ -118,7 +118,6 @@
         <!-- partial:partials/_footer.html -->
 @endsection
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 
 <!-- DataTables Buttons CSS -->
@@ -133,7 +132,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.2/js/buttons.html5.min.js"></script>
-
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 <script>
   
   $(document).ready(function() {
@@ -235,6 +234,10 @@
     $('#addRowButton').on('click', function() {
         $('#addRowModal').modal('show');
     });
+    $('#closeModal').on('click', function() {
+        $('#newCode').val('');
+        $('#addRowModal').modal('hide');
+    });
 
     $('#submitRowButton').on('click', function() {
         var newCode = $('#newCode').val();
@@ -254,6 +257,7 @@
             success: function(response) {
                 if (response.success) {
                     $('#addRowModal').modal('hide');
+                    $('#newCode').val('');
                     table.clear().draw();
                     // table.ajax.reload(); 
                     // Optionally, reload the data table

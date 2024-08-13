@@ -2,8 +2,11 @@
 <div class="container">  
 <h3 style="text-align: center;" class="heading-section">DISPATCH LIST</h3>
     <br/> 
-    
-    <p><b>Driver Name:</b> {{$driverName}} </p>
+    @if(isset($from_date))<p>From: {{ isset($from_date) && $from_date ? date('d-m-Y', strtotime($from_date)) : 'N/A' }}</p>@endif
+    @if(isset($to_date))    <p>To: {{ isset($to_date) && $to_date ? date('d-m-Y', strtotime($to_date)) : 'N/A' }}</p>@endif
+    @if(isset($fromserial))    <p>From Serial No: {{ isset($fromserial) ? $fromserial : 'N/A' }}</p>@endif
+    @if(isset($toserial))    <p>To Serial No: {{ isset($toserial) ? $toserial : 'N/A' }}</p>@endif
+   @if(isset($driverName)) <p><b>Driver Name:</b> {{$driverName}} </p>@endif
     <table style="width: 100%; background: #f7f7f7;">  
         <tr>  
         <th>SI.No.</th>

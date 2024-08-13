@@ -70,7 +70,7 @@ class DispatchController extends Controller
                 ->select(
                     'orders.id', 'thickness', 'length', 'width', 
                     'users.fullname as username', 'quantity', 'design', 
-                    'code', 'remarks', 'status', 'user_id', 'serial_no'
+                    'code', 'remarks', 'status', 'user_id', 'serial_no','frame'
                 )
                 ->get();
     
@@ -85,7 +85,7 @@ class DispatchController extends Controller
                 ];
     
                 ini_set('memory_limit', '512M');  // Increase memory limit if necessary
-                $pdf = PDF::loadView('order_pdf', $data);  // Load view into PDF
+                $pdf = PDF::loadView('order/driver_order_pdf', $data);  // Load view into PDF
     
                 $report = 'report_' . rand(10, 100) . '.pdf';  // Generate random filename
                 $pdf->save(public_path('/reports/' . $report));  // Save the PDF file
@@ -93,7 +93,7 @@ class DispatchController extends Controller
                 $file = public_path('/reports/' . $report);
     
                 // Return the PDF as a download
-                return response()->download($file, 'order.pdf');
+                return response()->download($file, 'dispatch_report.pdf');
             } else {
                 // If no data, return an error message
                 Session::flash('error', 'No Data to Print');
