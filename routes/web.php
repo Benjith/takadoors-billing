@@ -21,6 +21,9 @@ Route::middleware(['web','auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\ReportController::class, 'index'])->name('home');
 
     Route::any('/search', [ReportController::class,'search'])->name('search');
+    Route::any('/search_stock', [ReportController::class,'search_stock'])->name('search_stock');
+    
+    Route::any('/search', [ReportController::class,'search'])->name('search');
     Route::any('/print/{from_date}/{to_date}/{fromserial}/{toserial}/{agent}/{code}', [ReportController::class,'print'])->name('print');
     // Route::any('/print', [ReportController::class,'print'])->name('print');
     //closing stock

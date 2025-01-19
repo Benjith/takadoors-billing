@@ -105,6 +105,57 @@ class ReportController extends Controller
         //  return response()->json(['msg'=>'success','response'=>$orders]);
           return view('welcome', array('agents'=>$agents,'code'=>$code ,'selected_agent'=>$agent,'orders' => $orders,'from_date'=>$from_date,'to_date'=>$to_date,'fromserial'=>$fromserial,'toserial'=>$toserial));
     }
+
+    public function stock_report()
+    {
+        try{
+            $from_date = "null";
+            $to_date = "null";
+            $code = "";
+            $materials = DB::table('orders')
+            ->join('stocks', 'orders.stock_id', '=', 'stocks.id')
+            ->join('raw_materials', 'stocks.material_id', '=', 'raw_materials.id')
+            // ->where('orders.code', $code)
+            ->select('raw_materials.*',DB::raw('COUNT(raw_materials.id) as total')) 
+            ->groupBy('orders.stock_id')
+            ->paginate(20);
+            return view('stock_report',compact('code','materials','from_date','to_date'));
+        }catch (Exception $ex) {
+            return redirect('/');
+        }
+    }
+    public function search_stock(Request $request) {
+        $from_date = $request->get('fromdate')?$request->get('fromdate'):'';
+        $to_date = $request->get('todate')?$request->get('todate'):'';
+        $code = $request->get('code')?$request->get('code'):'';
+        $materials = DB::table('orders')
+        ->join('stocks', 'orders.stock_id', '=', 'stocks.id')
+        ->join('raw_materials', 'stocks.material_id', '=', 'raw_materials.id')
+        ->when($code != "" && $from_date == "" && $to_date == "",function($query) use ($code){
+            $query->where('orders.code', $code)->get();
+        })
+        ->when($code == "" && $from_date != "" && $to_date == "",function($query) use ($from_date,$to_date){
+            $query->where('orders.created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")->get();
+        })
+        ->when($code == "" && $from_date != "" && $to_date != "",function($query) use ($from_date,$to_date){
+            $query->whereBetween('orders.created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])->get();
+        })
+        ->when($code != "" && $from_date != "" && $to_date == "",function($query) use ($code){
+            $query->where('orders.created_at','>',date('Y-m-d', strtotime($from_date))." 00:00:00")
+            ->where('orders.code', $code)->get();
+        })
+        ->when($code != "" && $from_date != "" && $to_date == "",function($query) use ($code){
+            $query->whereBetween('orders.created_at', [ date('Y-m-d', strtotime($from_date))." 00:00:00",  date('Y-m-d', strtotime($to_date))." 23:59:59"])
+            ->where('orders.code', $code)->get();
+        })
+        ->select('raw_materials.*',DB::raw('COUNT(raw_materials.id) as total')) 
+        ->groupBy('orders.stock_id')
+        ->paginate(20);
+        return view('stock_report', array('materials'=>$materials,'code'=>$code,'from_date'=>$from_date,'to_date'=>$to_date));
+    }
+   
+
+
     // public function print(Request $request) {
     //     try{  
     //         if(is_countable($request->orderList) && count($request->orderList)){
