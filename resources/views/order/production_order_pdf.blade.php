@@ -14,7 +14,9 @@
                             <th>No.s</th>
                             <th>Design</th>
                             <th>PVC Model </th>
+                            <th>Color </th>
                             <th>Code</th>
+                            <th>Sub</th>
                             <th>Remarks</th>
         </tr> <?php $quantity = 0; ?> 
         @foreach ($orders as $key => $order)
@@ -29,7 +31,9 @@
                             <td>{{$order->quantity}}</td>
                             <td>{{$order->design}}</td>
                             <td>{{$order->frame}}</td>
+                            <td>{{$order->color}}</td>
                             <td>{{$order->code}}</td>
+                            <td>{{$order->sub}}</td>
                             <td>{{strtoupper($order->remarks)}}</td>                
 
         </tr> 

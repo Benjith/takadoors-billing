@@ -45,7 +45,9 @@
                             <th>Quantity</th>
                             <th>Design</th>
                             <th> PVC Model  </th>
+                            <th>Color </th>
                             <th> Code </th>
+                            <th> Sub </th>
                             <th>Remarks</th>
                         </tr>
                       </thead>
@@ -58,8 +60,10 @@
                                           <td><textarea class="form-control" name="quantity" rows="1"cols="20" data-row="1" data-column="4"></textarea></td>
                                            <td><textarea class="form-control" name="design" rows="1" cols="30" data-row="1" data-column="5"></textarea></td>
                                            <td><textarea class="form-control" name="frame" rows="1" cols="30" data-row="1" data-column="6"></textarea></td>
-                                           <td><textarea class="form-control" name="code" rows="1" cols="30" data-row="1" data-column="7"></textarea></td>
-                                           <td><textarea class="form-control" name="remarks" rows="1" cols="40" data-row="1" data-column="8"></textarea></td>
+                                           <td><textarea class="form-control" name="color" rows="1" cols="40" data-row="1" data-column="7"></textarea></td>
+                                           <td><textarea class="form-control" name="code" rows="1" cols="30" data-row="1" data-column="8"></textarea></td>
+                                           <td><textarea class="form-control" name="sub" rows="1" cols="40" data-row="1" data-column="9"></textarea></td>
+                                           <td><textarea class="form-control" name="remarks" rows="1" cols="40" data-row="1" data-column="10"></textarea></td>
 
                         </tr>
                       </tbody>
@@ -100,15 +104,25 @@ $(document).ready(function(){
         if(lastRowFrameValue == undefined){
           lastRowFrameValue = '';
         }
+
+        var lastRowColorValue = $("#orderTable tbody tr:last textarea[name='color']").val();
+        if(lastRowColorValue == undefined){
+          lastRowColorValue = '';
+        }
+
         var lastRowThicknessValue = $("#orderTable tbody tr:last textarea[name='thickness']").val();
         if(lastRowThicknessValue == undefined){
           lastRowThicknessValue = '';
+        }
+        var lastRowSubValue = $("#orderTable tbody tr:last textarea[name='sub']").val();
+        if(lastRowSubValue == undefined){
+          lastRowSubValue = '';
         }
         var lastRowRemarkValue = $("#orderTable tbody tr:last textarea[name='remarks']").val();
         if(lastRowRemarkValue == undefined){
           lastRowThicknessValue = '';
         }
-        var newRow = '<tr><td class="serial-number">1</td><td><textarea class="form-control" name="thickness" rows="1" data-row="'+datarow+'" data-column="1">'+lastRowThicknessValue+'</textarea></td><td><textarea class="form-control" name="length" rows="1" data-row="'+datarow+'" data-column="2"></textarea></td><td><textarea name="width" class="form-control"  rows="1"data-row="'+datarow+'" data-column="3"></textarea></td><td><textarea class="form-control" name="quantity" rows="1" data-row="'+datarow+'" data-column="4"></textarea></td><td><textarea class="form-control" name="design" rows="1" data-row="'+datarow+'" data-column="5">'+lastRowDesignValue+'</textarea></td><td><textarea class="form-control" name="frame" rows="1" data-row="'+datarow+'" data-column="6">'+lastRowFrameValue+'</textarea></td><td><textarea class="form-control" name="code" rows="1" data-row="'+datarow+'" data-column="7">'+lastRowCodeValue+'</textarea></td><td><textarea class="form-control" name="remarks" rows="1" data-row="'+datarow+'" data-column="8">'+lastRowRemarkValue+'</textarea></td><td><a href="#" class="deleteRow"><i class="mdi mdi-delete"></i></a></td></tr>';
+        var newRow = '<tr><td class="serial-number">1</td><td><textarea class="form-control" name="thickness" rows="1" data-row="'+datarow+'" data-column="1">'+lastRowThicknessValue+'</textarea></td><td><textarea class="form-control" name="length" rows="1" data-row="'+datarow+'" data-column="2"></textarea></td><td><textarea name="width" class="form-control"  rows="1"data-row="'+datarow+'" data-column="3"></textarea></td><td><textarea class="form-control" name="quantity" rows="1" data-row="'+datarow+'" data-column="4"></textarea></td><td><textarea class="form-control" name="design" rows="1" data-row="'+datarow+'" data-column="5">'+lastRowDesignValue+'</textarea></td><td><textarea class="form-control" name="frame" rows="1" data-row="'+datarow+'" data-column="6">'+lastRowFrameValue+'</textarea></td><td><textarea class="form-control" name="color" rows="1" data-row="'+datarow+'" data-column="7">'+lastRowColorValue+'</textarea></td><td><textarea class="form-control" name="code" rows="1" data-row="'+datarow+'" data-column="8">'+lastRowCodeValue+'</textarea></td><td><textarea class="form-control" name="sub" rows="1" data-row="'+datarow+'" data-column="8">'+lastRowSubValue+'</textarea></td><td><textarea class="form-control" name="remarks" rows="1" data-row="'+datarow+'" data-column="9">'+lastRowRemarkValue+'</textarea></td><td><a href="#" class="deleteRow"><i class="mdi mdi-delete"></i></a></td></tr>';
         $("#orderTable tbody").append(newRow);
         datarow++;
         reorderSerialNumbers();
@@ -121,6 +135,8 @@ $(document).ready(function(){
             var row = parseInt(currentInput.data('row'));
             var column = parseInt(currentInput.data('column'));
             var nextInput;
+            console.log('Current Row:', row, 'Column:', column, 'Key Code:', e.keyCode);
+            
             switch (e.keyCode) {
                 case 37: // Left arrow key
                     nextInput = $('[data-row="' + row + '"][data-column="' + (column - 1) + '"]');

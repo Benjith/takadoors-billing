@@ -87,7 +87,9 @@ class OrderController extends Controller
             $order->quantity = $request->quantity[$index];
             $order->design = $request->design[$index];
             $order->frame = $request->frame[$index];
+            $order->color = $request->color[$index];
             $order->code = $request->code[$index];
+            $order->sub = $request->sub[$index];
             $order->remarks = $request->remarks[$index];
 
             // Save the changes
@@ -128,8 +130,15 @@ class OrderController extends Controller
             $from_date = "null";
             $to_date = "null";
             $code = "";
+            $sub = "";
+            // if(request()->ajax()){
+            //     $orders = Order::where('is_active',1)->where('status',3)->orderBy('orders.id','ASC')->get(); 
+            //     return DataTables::of($orders)
+            //         ->make(true);
+            // }
             $orders = Order::where('is_active',1)->where('status',3)->orderBy('orders.id','ASC')->paginate(20); 
-            return view('order.dispatch_list',compact('orders','from_date','to_date','code'));
+
+            return view('order.dispatch_list',compact('orders','from_date','to_date','code','sub'));
        }catch (Exception $ex) {
            return redirect('/');
        }
@@ -139,6 +148,7 @@ class OrderController extends Controller
     $from_date = $request->get('fromdate')?$request->get('fromdate'):'';
     $to_date = $request->get('todate')?$request->get('todate'):'';
     $code = $request->get('code')?$request->get('code'):'';
+    $sub = $request->get('sub')?$request->get('sub'):'';
     $fromserial = $request->get('fromserial')?$request->get('fromserial'):'';
     $toserial = $request->get('toserial')?$request->get('toserial'):'';
     $orders = DB::table('orders')
@@ -179,6 +189,7 @@ public function dispatchSearch(Request $request) {
     $code = $request->get('code') ?: '';
     $fromserial = $request->get('fromserial') ?: '';
     $toserial = $request->get('toserial') ?: '';
+    $sub = $request->get('sub') ?: '';
     
     $query = DB::table('orders')
         ->select('orders.*', 'users.fullname')
@@ -202,7 +213,10 @@ public function dispatchSearch(Request $request) {
     } elseif ($fromserial) {
         $query->where('serial_no', '>=', intval($fromserial));
     }
-    
+
+    if ($sub) {
+        $query->where('sub', $sub);
+    }
     $orders = $query->paginate(20)->appends([
         'fromdate' => $from_date,
         'todate' => $to_date,
@@ -220,6 +234,48 @@ public function dispatchSearch(Request $request) {
     ]);
 }
 
+public function dispatchSearchAjax(Request $request) {
+    if ($request->ajax()) {
+            $from_date = $request->get('fromdate') ?: '';
+            $to_date = $request->get('todate') ?: '';
+            $code = $request->get('code') ?: '';
+            $fromserial = $request->get('fromserial') ?: '';
+            $toserial = $request->get('toserial') ?: '';
+            $sub = $request->get('sub') ?: '';
+    
+            $query = DB::table('orders')
+                ->select('orders.*', 'users.fullname')
+                ->leftJoin('users', 'users.id', '=', 'orders.user_id')
+                ->where('is_active', 1)
+                ->where('status', 3)
+                ->orderBy('orders.id', 'ASC');
+
+            if ($from_date && $to_date) {
+                $query->whereBetween('orders.created_at', [date('Y-m-d', strtotime($from_date)) . " 00:00:00", date('Y-m-d', strtotime($to_date)) . " 23:59:59"]);
+            } elseif ($from_date) {
+                $query->where('orders.created_at', '>', date('Y-m-d', strtotime($from_date)) . " 00:00:00");
+            }
+            
+            if ($code) {
+                $query->where('code', $code);
+            }
+            
+            if ($fromserial && $toserial) {
+                $query->whereBetween('serial_no', [intval($fromserial), intval($toserial)]);
+            } elseif ($fromserial) {
+                $query->where('serial_no', '>=', intval($fromserial));
+            }
+
+            if ($sub) {
+                $query->where('sub', $sub);
+            }
+            $orders = $query->get();
+            return DataTables::of($orders)
+                    ->make(true);
+    }
+
+  
+}
 
 public function billingSearch(Request $request) {
     $from_date = $request->get('fromdate')?$request->get('fromdate'):'';

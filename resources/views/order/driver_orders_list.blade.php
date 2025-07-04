@@ -71,7 +71,9 @@
                             <th>Quantity</th>
                             <th>Design</th>
                             <th> PVC Model  </th>
+                            <th> Color  </th>
                             <th> Code </th>
+                            <th> Sub </th>
                             <th>Remarks</th>
                         </tr>
                       </thead>
@@ -160,7 +162,9 @@
             { data: 'quantity', name: 'quantity' },
             { data: 'design', name: 'design' },
             { data: 'frame', name: 'frame' },
+            { data: 'color', name: 'color' },
             { data: 'code', name: 'code' },
+            { data: 'sub', name: 'sub' },
             { data: 'remarks', name: 'remarks' }
         ],
           paging: true, 

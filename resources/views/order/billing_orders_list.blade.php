@@ -55,7 +55,9 @@
                             <th>Quantity</th>
                             <th>Design</th>
                             <th> PVC Model  </th>
+                            <th> Color  </th>
                             <th> Code </th>
+                            <th> Sub </th>
                             <th>Remarks</th>
                         </tr>
                       </thead>

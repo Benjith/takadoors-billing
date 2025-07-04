@@ -22,7 +22,7 @@ Route::middleware(['web','auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\ReportController::class, 'index'])->name('home');
 
     Route::any('/search', [ReportController::class,'search'])->name('search');
-    Route::any('/print/{from_date}/{to_date}/{fromserial}/{toserial}/{agent}/{code}', [ReportController::class,'print'])->name('print');
+    Route::get('print/{from_date?}/{to_date?}/{fromserial?}/{toserial?}/{agent?}/{code?}', [ReportController::class,'print'])->name('print');
     // Route::any('/print', [ReportController::class,'print'])->name('print');
     //closing stock
     Route::get('/closing_stock', [ReportController::class,'closing_stock_report']);
@@ -40,6 +40,7 @@ Route::middleware(['web','auth'])->group(function () {
     
     Route::get('/dispatch', [App\Http\Controllers\Admin\OrderController::class, 'getDispatchOrders'])->name('dispatchorders');
     Route::any('/dispatch_search', [App\Http\Controllers\Admin\OrderController::class, 'dispatchSearch'])->name('dispatch_search');
+    Route::any('/dispatch_search_ajax', [App\Http\Controllers\Admin\OrderController::class, 'dispatchSearchAjax'])->name('dispatch_search_ajax');
 
     Route::any('/billing_search', [App\Http\Controllers\Admin\OrderController::class, 'billingSearch'])->name('billing_search');
 
@@ -57,7 +58,7 @@ Route::middleware(['web','auth'])->group(function () {
     Route::post('/driver/add', [App\Http\Controllers\Admin\OrderController::class, 'addRowDriver'])->name('addRowToSession');
 
     
-    Route::get('/print/{from_date}/{to_date}/{fromserial}/{toserial}/{code}', [App\Http\Controllers\Admin\DispatchController::class, 'print'])->name('dispatch.print');
+    Route::get('dispatch/print/{from_date}/{to_date}/{fromserial}/{toserial}/{code}', [App\Http\Controllers\Admin\DispatchController::class, 'print'])->name('dispatch.print');
 
 });
 

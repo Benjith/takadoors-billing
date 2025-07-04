@@ -70,7 +70,7 @@ class DispatchController extends Controller
                 ->select(
                     'orders.id', 'thickness', 'length', 'width', 
                     'users.fullname as username', 'quantity', 'design', 
-                    'code', 'remarks', 'status', 'user_id', 'serial_no','frame'
+                    'code','color','sub' ,'remarks', 'status', 'user_id', 'serial_no','frame'
                 )
                 ->get();
     

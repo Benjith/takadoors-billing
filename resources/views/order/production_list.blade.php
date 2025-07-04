@@ -53,7 +53,9 @@
                             <th>Quantity</th>
                             <th>Design</th>
                             <th> PVC Model  </th>
+                            <th> Color  </th>
                             <th> Code </th>
+                            <th> Sub </th>
                             <th>Remarks</th>
                         </tr>
                       </thead>
@@ -68,8 +70,10 @@
                                           <td><textarea class="form-control" name="quantity[]" rows="1"cols="20" data-row="<?= $row['id'] ?>" data-column="4"><?= $row['quantity'] ?></textarea></td>
                                            <td><textarea class="form-control" name="design[]" rows="1" cols="30" data-row="<?= $row['id'] ?>" data-column="5"><?= $row['design'] ?></textarea></td>
                                            <td><textarea class="form-control" name="frame[]" rows="1" cols="30" data-row="<?= $row['id'] ?>" data-column="6"><?= $row['frame'] ?></textarea></td>
-                                           <td><textarea class="form-control" name="code[]" rows="1" cols="30" data-row="<?= $row['id'] ?>" data-column="7"><?= $row['code'] ?></textarea></td>
-                                           <td><textarea class="form-control" name="remarks[]" rows="1" cols="40" data-row="<?= $row['id'] ?>" data-column="8"><?= $row['remarks'] ?></textarea></td>
+                                           <td><textarea class="form-control" name="color[]" rows="1" cols="40" data-row="<?= $row['id'] ?>" data-column="7"><?= $row['color'] ?></textarea></td>
+                                           <td><textarea class="form-control" name="code[]" rows="1" cols="30" data-row="<?= $row['id'] ?>" data-column="8"><?= $row['code'] ?></textarea></td>
+                                           <td><textarea class="form-control" name="sub[]" rows="1" cols="40" data-row="<?= $row['id'] ?>" data-column="9"><?= $row['sub'] ?></textarea></td>
+                                           <td><textarea class="form-control" name="remarks[]" rows="1" cols="40" data-row="<?= $row['id'] ?>" data-column="10"><?= $row['remarks'] ?></textarea></td>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
