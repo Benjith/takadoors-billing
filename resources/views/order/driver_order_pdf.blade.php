@@ -34,21 +34,28 @@
              <?php if (is_numeric($order->quantity)) {
                  $quantity = (int) $quantity + (int) $order->quantity;
              } ?>
-             <tr>
-                 <td>{{ $order->serial_no }}</td>
-                 <td>{{ $order->thickness }}</td>
-                 <td>{{ $order->length }}</td>
-                 <td>{{ $order->width }}</td>
-                 <td>{{ $order->quantity }}</td>
-                 <td>{{ $order->design }}</td>
-                 <td>{{ $order->frame }}</td>
-                 <td>{{ $order->color }}</td>
-                 <td>{{ $order->code }}</td>
-                 <td>{{ $order->sub }}</td>
-                 <td>{{ strtoupper($order->remarks) }}</td>
+             @if (!empty($order->colspan) && $order->colspan == true)
+                 {{-- Show only 1 row with colspan --}}
+                 <tr>
+                     <td colspan="11" style="text-align: left;"><strong>{{ $order->serial_no }}</strong></td>
+                 </tr>
+             @else
+                 <tr>
+                     <td>{{ $order->serial_no }}</td>
+                     <td>{{ $order->thickness }}</td>
+                     <td>{{ $order->length }}</td>
+                     <td>{{ $order->width }}</td>
+                     <td>{{ $order->quantity }}</td>
+                     <td>{{ $order->design }}</td>
+                     <td>{{ $order->frame }}</td>
+                     <td>{{ $order->color }}</td>
+                     <td>{{ $order->code }}</td>
+                     <td>{{ $order->sub }}</td>
+                     <td>{{ strtoupper($order->remarks) }}</td>
 
 
-             </tr>
+                 </tr>
+             @endif
          @endforeach
      </table>
      <p><b>Total Quantity : </b><?php if (isset($quantity)) {

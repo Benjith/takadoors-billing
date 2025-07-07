@@ -13,6 +13,7 @@
     <!-- endinject -->
     <!-- plugin css for this page -->
     <link rel="stylesheet" href="{{ URL::asset('vendors/datatables.net-bs4/dataTables.bootstrap4.css') }}">
+    <link rel="stylesheet" href="{{ URL::asset('vendors/datatables.net-bs4/rowReorder.bootstrap4.css') }}">
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <link rel="stylesheet" href="{{ URL::asset('css/style.css') }}">
@@ -158,6 +159,7 @@
     <script src="{{ URL::asset('vendors/chart.js/Chart.min.js') }}"></script>
     <script src="{{ URL::asset('vendors/datatables.net/jquery.dataTables.js') }}"></script>
     <script src="{{ URL::asset('vendors/datatables.net-bs4/dataTables.bootstrap4.js') }}"></script>
+    <script src="{{ URL::asset('vendors/datatables.net-bs4/rowReorder.bootstrap4.js') }}"></script>
     <!-- End plugin js for this page-->
     <!-- inject:js -->
     <script src="{{ URL::asset('js/off-canvas.js') }}"></script>
