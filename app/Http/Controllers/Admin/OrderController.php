@@ -399,7 +399,6 @@ public function getDriverOrdersSearch(Request $request)
             $mergedData = $request->session()->get('previousData', []);
             $request->session()->put('undoFlag', '0');
         }
-
         return DataTables::of($mergedData ?: [])->toJson();
     }
 
@@ -594,7 +593,6 @@ public function undoDriverList(Request $request)
 
     public function addRowDriver(Request $request) {
         $newCode = $request->get('newCode');
-        
         if ($newCode) {
             $sequenceNo = $this->generateSequenceNumber($request);
             $rows = session()->get('custom_rows', []);
