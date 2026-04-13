@@ -51,6 +51,8 @@ class StockController extends Controller
     {
         try{
             $search = $request->get('search');
+            $minWidth = $request->get('minWidth');
+            $maxWidth = $request->get('maxWidth');
             if($search){
                 $data = Stock::where('design', 'LIKE', "%{$search}%")->where('status',1)->orderBy('id','DESC')->get();
                 $response = array(
@@ -59,7 +61,18 @@ class StockController extends Controller
                     'message' => 'Success',
                     'response' => $data
                 );
-            }else{
+            }
+            else if($minWidth && $maxWidth){
+                $data = Stock::whereBetween('width', [$minWidth, $maxWidth])->where('status',1)->orderBy('id','DESC')->get();
+                $response = array(
+                    'hasError' => false,
+                    'errorCode' => -1,
+                    'message' => 'Success',
+                    'response' => $data
+                );
+            }
+            
+            else{
                 $data = Stock::all();
                 $response = array(
                     'hasError' => false,
