@@ -47,50 +47,45 @@ class StockController extends Controller
         return \Response::json($response); 
     }
 
-    public function search(Request $request)
-    {
-        try{
-            $search = $request->get('search');
-            $minWidth = $request->get('minWidth');
-            $maxWidth = $request->get('maxWidth');
-            if($search){
-                $data = Stock::where('design', 'LIKE', "%{$search}%")->where('status',1)->orderBy('id','DESC')->get();
-                $response = array(
-                    'hasError' => false,
-                    'errorCode' => -1,
-                    'message' => 'Success',
-                    'response' => $data
-                );
-            }
-            else if($minWidth && $maxWidth){
-                $data = Stock::whereBetween('width', [$minWidth, $maxWidth])->where('status',1)->orderBy('id','DESC')->get();
-                $response = array(
-                    'hasError' => false,
-                    'errorCode' => -1,
-                    'message' => 'Success',
-                    'response' => $data
-                );
-            }
-            
-            else{
-                $data = Stock::all();
-                $response = array(
-                    'hasError' => false,
-                    'errorCode' => -1,
-                    'message' => 'Success',
-                    'response' => $data
-                );
-            }
-        }catch (Exception $ex) {
-            $response = array(
-                'hasError' => TRUE,
-                'errorCode' => 500,
-                'message' => 'Server Error.' . $ex->getMessage(),
-                'response' => null
-            );
+  public function search(Request $request)
+{
+    try {
+        $search = $request->get('search');
+        $minWidth = $request->get('minWidth');
+        $maxWidth = $request->get('maxWidth');
+
+        $query = Stock::query()->where('status', 1);
+
+        // Apply width filter
+        if ($minWidth !== null && $maxWidth !== null) {
+            $query->whereBetween('width', [$minWidth, $maxWidth]);
         }
-        return \Response::json($response); 
+
+        // Apply search filter
+        if ($search) {
+            $query->where('design', 'LIKE', "%{$search}%");
+        }
+
+        $data = $query->orderBy('id', 'DESC')->get();
+
+        $response = [
+            'hasError' => false,
+            'errorCode' => -1,
+            'message' => 'Success',
+            'response' => $data
+        ];
+
+    } catch (Exception $ex) {
+        $response = [
+            'hasError' => true,
+            'errorCode' => 500,
+            'message' => 'Server Error. ' . $ex->getMessage(),
+            'response' => null
+        ];
     }
+
+    return response()->json($response);
+}
 
     /**
      * Show the form for creating a new resource.
