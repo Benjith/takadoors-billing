@@ -62,7 +62,7 @@ class StockController extends Controller
         }
 
         // Apply search filter
-        if ($search) {
+       else if ($search) {
             $query->where('design', 'LIKE', "%{$search}%");
         }
 
